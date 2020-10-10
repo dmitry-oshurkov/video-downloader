@@ -1,6 +1,6 @@
 package com.downloader
 
-import java.util.prefs.Preferences.userRoot
+import java.util.prefs.Preferences.*
 
 object Prefs {
 

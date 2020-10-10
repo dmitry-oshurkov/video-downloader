@@ -1,12 +1,11 @@
 package com.downloader
 
-import com.downloader.view.Main
-import com.sun.net.httpserver.HttpServer
-import javafx.stage.Stage
-import tornadofx.App
-import tornadofx.runLater
-import java.io.PrintWriter
-import java.net.InetSocketAddress
+import com.downloader.view.*
+import com.sun.net.httpserver.*
+import javafx.stage.*
+import tornadofx.*
+import java.io.*
+import java.net.*
 
 class Application : App(Main::class, Styles::class) {
 

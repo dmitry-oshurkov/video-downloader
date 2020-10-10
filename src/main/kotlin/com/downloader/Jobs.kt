@@ -3,20 +3,16 @@
 package com.downloader
 
 import com.downloader.DownloadState.*
-import javafx.embed.swing.SwingFXUtils
-import javafx.scene.image.Image
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import tornadofx.asObservable
-import tornadofx.runLater
-import java.io.File
-import java.net.URL
-import java.nio.file.Files
-import java.text.StringCharacterIterator
-import java.time.LocalTime
-import javax.imageio.ImageIO
+import javafx.embed.swing.*
+import javafx.scene.image.*
+import kotlinx.coroutines.*
+import tornadofx.*
+import java.io.*
+import java.net.*
+import java.nio.file.*
+import java.text.*
+import java.time.*
+import javax.imageio.*
 
 fun placeToQueue(url: String?) = url
     ?.takeIf { it !in jobs.map { job -> job.url } }

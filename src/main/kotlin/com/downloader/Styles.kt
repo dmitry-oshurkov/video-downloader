@@ -1,11 +1,11 @@
 package com.downloader
 
-import javafx.scene.effect.BlurType.GAUSSIAN
-import javafx.scene.effect.DropShadow
+import javafx.scene.effect.*
+import javafx.scene.effect.BlurType.*
 import javafx.scene.paint.Color.*
-import javafx.scene.text.FontWeight.BOLD
+import javafx.scene.text.FontWeight.*
 import tornadofx.*
-import tornadofx.FXVisibility.HIDDEN
+import tornadofx.FXVisibility.*
 
 class Styles : Stylesheet() {
 

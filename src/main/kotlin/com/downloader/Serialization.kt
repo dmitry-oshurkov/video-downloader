@@ -1,13 +1,10 @@
 package com.downloader
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT
-import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-import java.text.SimpleDateFormat
+import com.fasterxml.jackson.annotation.JsonInclude.Include.*
+import com.fasterxml.jackson.databind.*
+import com.fasterxml.jackson.databind.SerializationFeature.*
+import com.fasterxml.jackson.module.kotlin.*
+import java.text.*
 
 fun ObjectMapper.setup() = run {
 

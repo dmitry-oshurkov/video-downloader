@@ -1,6 +1,6 @@
 package com.downloader
 
-import tornadofx.launch
+import tornadofx.*
 
 fun main() {
     launch<Application>()

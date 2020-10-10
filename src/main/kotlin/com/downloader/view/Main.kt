@@ -1,27 +1,24 @@
 package com.downloader.view
 
 import com.downloader.*
-import com.downloader.DownloadState.COMPLETED
+import com.downloader.DownloadState.*
 import com.downloader.Styles.Companion.backImage
 import com.downloader.Styles.Companion.downloadButton
 import com.downloader.Styles.Companion.jobTitle
 import com.downloader.Styles.Companion.main
 import com.downloader.Styles.Companion.progressLabels
 import com.downloader.Styles.Companion.videoButton
-import javafx.beans.property.BooleanProperty
-import javafx.geometry.Pos.BOTTOM_RIGHT
-import javafx.scene.control.ListView
-import javafx.scene.control.SelectionMode.SINGLE
-import javafx.scene.input.DataFormat.PLAIN_TEXT
-import javafx.scene.layout.Priority.ALWAYS
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import javafx.beans.property.*
+import javafx.geometry.Pos.*
+import javafx.scene.control.*
+import javafx.scene.control.SelectionMode.*
+import javafx.scene.input.DataFormat.*
+import javafx.scene.layout.Priority.*
+import kotlinx.coroutines.*
 import tornadofx.*
-import java.awt.Desktop
-import java.io.File
-import java.net.URI
+import java.awt.*
+import java.io.*
+import java.net.*
 
 class Main : View("Загрузка видео") {
 

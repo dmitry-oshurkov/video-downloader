@@ -1,25 +1,18 @@
 package com.downloader
 
 import com.downloader.Styles.Companion.glyphLabel
-import javafx.embed.swing.SwingFXUtils
-import javafx.event.EventTarget
-import javafx.scene.control.Button
-import javafx.scene.control.Label
-import javafx.scene.image.Image
-import javafx.scene.image.ImageView
-import org.zeroturnaround.exec.ProcessExecutor
-import org.zeroturnaround.exec.stream.LogOutputStream
-import tornadofx.addClass
-import tornadofx.button
-import tornadofx.label
-import tornadofx.tooltip
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.Path
+import javafx.embed.swing.*
+import javafx.event.*
+import javafx.scene.control.*
+import javafx.scene.image.*
+import org.zeroturnaround.exec.*
+import org.zeroturnaround.exec.stream.*
+import tornadofx.*
+import java.io.*
+import java.nio.file.*
 import java.nio.file.attribute.PosixFilePermission.*
 import java.util.*
-import javax.imageio.ImageIO
+import javax.imageio.*
 
 fun execYoutubeDl(vararg args: String, progress: (String) -> Unit) = ProcessExecutor()
     .command(listOf("youtube-dl", *args))

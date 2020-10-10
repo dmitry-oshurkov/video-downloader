@@ -2,19 +2,15 @@
 
 package com.downloader
 
-import com.downloader.DownloadState.NEW
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.annotation.JsonPropertyOrder
-import javafx.beans.property.SimpleObjectProperty
-import javafx.embed.swing.SwingFXUtils
-import javafx.scene.image.Image
-import tornadofx.getProperty
-import tornadofx.property
-import tornadofx.stringBinding
-import tornadofx.toProperty
-import java.io.ByteArrayInputStream
+import com.downloader.DownloadState.*
+import com.fasterxml.jackson.annotation.*
+import javafx.beans.property.*
+import javafx.embed.swing.*
+import javafx.scene.image.*
+import tornadofx.*
+import java.io.*
 import java.util.*
-import javax.imageio.ImageIO
+import javax.imageio.*
 
 @JsonIgnoreProperties("thumbnailImage")
 @JsonPropertyOrder("pos", "url", "title", "duration", "file", "fileSize", "videoFormat", "progress", "speed", "eta", "state")
