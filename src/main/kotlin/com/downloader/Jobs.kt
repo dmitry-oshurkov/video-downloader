@@ -84,14 +84,7 @@ private fun DownloadJob.runDownload() = run {
 
         setInfo(videoInfo, thumbnail, thumbnailImage)
 
-        execYoutubeDl(
-            "--no-warnings",
-            "-f",
-            "bestvideo[height<=1080]+bestaudio/best[height<=1080]",
-            "-o",
-            outFile,
-            url
-        ) { s ->
+        execYoutubeDl("--no-warnings", "-f", "bestvideo[height<=1080]+bestaudio/best[height<=1080]", "-o", outFile, url) { s ->
 
             if (s.startsWith("ERROR"))
                 runLater { titleProperty().set(s) }
@@ -172,8 +165,7 @@ private fun convertUnits(value: String?) = when (value) {
 
 val jobs = mutableListOf<DownloadJob>().asObservable()
 
-private val downloadProgress =
-    """\[download\]\s+(.*)%\s+of\s+([\d.]*)(GiB|MiB|KiB).+at\s+([\d.]*)(GiB\/s|MiB\/s|KiB\/s).+ETA\s+([\d:]*)""".toRegex()
+private val downloadProgress = """\[download\]\s+(.*)%\s+of\s+([\d.]*)(GiB|MiB|KiB).+at\s+([\d.]*)(GiB\/s|MiB\/s|KiB\/s).+ETA\s+([\d:]*)""".toRegex()
 private val downloaded = """Merging formats into "([\s\S]*?)"""".toRegex()
 private val alreadyDownloaded = """\[download\]\s+(.*)\s+has""".toRegex()
 

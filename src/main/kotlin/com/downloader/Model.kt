@@ -17,19 +17,7 @@ import java.util.*
 import javax.imageio.ImageIO
 
 @JsonIgnoreProperties("thumbnailImage")
-@JsonPropertyOrder(
-    "pos",
-    "url",
-    "title",
-    "duration",
-    "file",
-    "fileSize",
-    "videoFormat",
-    "progress",
-    "speed",
-    "eta",
-    "state"
-)
+@JsonPropertyOrder("pos", "url", "title", "duration", "file", "fileSize", "videoFormat", "progress", "speed", "eta", "state")
 class DownloadJob(
     val pos: Int,
     val url: String,
