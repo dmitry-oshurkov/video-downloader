@@ -1,6 +1,11 @@
+import org.apache.tools.ant.taskdefs.condition.Os.*
+import java.time.*
+
 plugins {
     kotlin("jvm") version "1.4.10"
     id("org.openjfx.javafxplugin") version "0.0.9"
+    id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("org.beryx.runtime") version "1.11.4"
     application
 }
 
@@ -35,8 +40,30 @@ javafx {
     modules = listOf("javafx.controls", "javafx.swing")
 }
 
+runtime {
+    options.set(listOf("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages"))
+    modules.set(listOf("java.naming", "java.desktop", "jdk.unsupported", "jdk.httpserver", "jdk.crypto.ec"))
+    imageDir.set(file("$buildDir/release"))
+}
+
 tasks {
     compileKotlin { kotlinOptions.jvmTarget = "1.8" }
     compileTestKotlin { kotlinOptions.jvmTarget = compileKotlin.get().kotlinOptions.jvmTarget }
     wrapper { gradleVersion = "6.6.1" }
+
+    @Suppress("UNUSED_VARIABLE") val release by registering {
+        group = "distribution"
+        dependsOn(runtime)
+
+        doFirst {
+            with(file("${runtime.get().imageDir}/release")) {
+                appendText("APP_VERSION=\"$version\"\n")
+                appendText("APP_BUILT=\"${LocalDateTime.now()}\"\n")
+            }
+
+            val extForRemove = if (!isFamily(FAMILY_WINDOWS)) ".bat" else ""
+
+            file("${runtime.get().imageDir}/bin/${project.name}${extForRemove}").delete()
+        }
+    }
 }
