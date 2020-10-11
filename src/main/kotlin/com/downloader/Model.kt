@@ -12,13 +12,13 @@ import java.io.*
 import java.util.*
 import javax.imageio.*
 
-@JsonIgnoreProperties("thumbnailImage", "eta")
-@JsonPropertyOrder("url", "title", "duration", "file", "fileSize", "videoFormat", "progress", "speed", "state")
+@JsonIgnoreProperties("thumbnailImage", "progress", "speed", "eta")
+@JsonPropertyOrder("url", "title", "duration", "file", "fileSize", "videoFormat", "state")
 class DownloadJob(
     val url: String,
-    title: String = "Получение информации",
+    title: String? = null,
     thumbnail: String? = null,
-    duration: String = "Анализ...",
+    duration: String? = null,
     file: String? = null,
     fileSize: String? = null,
     videoFormat: String? = null,

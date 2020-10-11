@@ -119,12 +119,16 @@ class Main : View("Загрузка видео") {
 
                                             hbox {
                                                 spacing = 5.0
+                                                visibleWhen(it.durationProperty().isNotNull)
+
                                                 glyph("\uf210")
                                                 label(it.durationProperty())
                                             }
 
                                             hbox {
                                                 spacing = 5.0
+                                                visibleWhen(it.fileSizeProperty().isNotNull)
+
                                                 glyph("\uf318")
                                                 label(it.fileSizeProperty())
                                             }
@@ -135,7 +139,7 @@ class Main : View("Загрузка видео") {
 
                                             hbox {
                                                 spacing = 5.0
-                                                hiddenWhen(completed)
+                                                hiddenWhen(completed.or(it.progressProperty().isNull))
 
                                                 progressbar(it.progressProperty()) {
                                                     prefWidth = 150.0
@@ -148,6 +152,7 @@ class Main : View("Загрузка видео") {
 
                                             hbox {
                                                 spacing = 5.0
+                                                visibleWhen(it.speedProperty().isNotNull.or(it.videoFormatProperty().isNotNull))
 
                                                 glyph("\uf40b") {
                                                     removeWhen(completed)

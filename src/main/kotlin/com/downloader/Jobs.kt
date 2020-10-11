@@ -93,6 +93,8 @@ private fun DownloadJob.setInfo(videoInfo: YoutubeVideo, thumbnail: String, thum
     thumbnailProperty().set(thumbnail)
     thumbnailImageProperty().set(thumbnailImage)
     durationProperty().set(LocalTime.ofSecondOfDay(videoInfo.duration.toLong()).toString())
+
+    saveJobs()
 }
 
 private fun DownloadJob.setProgress(groups: MatchGroupCollection) = runLater {
