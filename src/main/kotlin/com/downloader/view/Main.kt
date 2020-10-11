@@ -8,9 +8,7 @@ import com.downloader.Styles.Companion.jobTitle
 import com.downloader.Styles.Companion.main
 import com.downloader.Styles.Companion.progressLabels
 import com.downloader.Styles.Companion.videoButton
-import javafx.beans.property.*
 import javafx.geometry.Pos.*
-import javafx.scene.control.*
 import javafx.scene.control.SelectionMode.*
 import javafx.scene.input.DataFormat.*
 import javafx.scene.layout.Priority.*
@@ -20,15 +18,11 @@ import java.awt.*
 import java.io.*
 import java.net.*
 
-class Main : View("Загрузка видео") {
+class Main : View("Видеозагрузка") {
 
-    private val desktop = Desktop.getDesktop()
-    private var canDownload: BooleanProperty = false.toProperty()
-    private var list: ListView<DownloadJob> by singleAssign()
+    private val canDownload = false.toProperty()
 
     init {
-        loadJobs()
-        runJobMonitor()
         runClipboardMonitor()
     }
 
@@ -62,8 +56,7 @@ class Main : View("Загрузка видео") {
                 }
             }
 
-            list = listview(jobs) {
-
+            listview(jobs) {
                 vgrow = ALWAYS
                 selectionModel.selectionMode = SINGLE
                 selectionModel.selectFirst()
@@ -209,6 +202,7 @@ class Main : View("Загрузка видео") {
         }
     }
 
+    private val desktop = Desktop.getDesktop()
     private fun DownloadJob.showVideo() = runAsync { desktop.open(File(file!!)) }
     private fun DownloadJob.browseVideoUrl() = runAsync { desktop.browse(URI(url)) }
 

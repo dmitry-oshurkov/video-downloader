@@ -35,6 +35,8 @@ class Application : App(Main::class, Styles::class) {
             }
         }
 
+        loadJobs()
+        runJobMonitor()
         startRest()
 
         super.start(stage)
