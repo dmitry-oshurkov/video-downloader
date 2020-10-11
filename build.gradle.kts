@@ -36,13 +36,7 @@ javafx {
 }
 
 tasks {
-    compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-    }
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-    }
-    wrapper {
-        gradleVersion = "6.6.1"
-    }
+    compileKotlin { kotlinOptions.jvmTarget = "1.8" }
+    compileTestKotlin { kotlinOptions.jvmTarget = compileKotlin.get().kotlinOptions.jvmTarget }
+    wrapper { gradleVersion = "6.6.1" }
 }
