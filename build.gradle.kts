@@ -1,4 +1,8 @@
+import com.inet.gradle.setup.abstracts.*
+import com.inet.gradle.setup.abstracts.DesktopStarter.Location.*
 import org.apache.tools.ant.taskdefs.condition.Os.*
+import org.gradle.crypto.checksum.*
+import org.gradle.crypto.checksum.Checksum.Algorithm.*
 import java.time.*
 
 plugins {
@@ -6,11 +10,13 @@ plugins {
     id("org.openjfx.javafxplugin") version "0.0.9"
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id("org.beryx.runtime") version "1.11.4"
-    application
+    id("de.inetsoftware.setupbuilder") version "4.8.7"
+    id("org.gradle.crypto.checksum") version "1.2.0"
 }
 
 group = "com.downloader"
 version = "20.1"
+description = "Видеозагрузка"
 
 val tornadofxVersion: String by rootProject
 
@@ -43,7 +49,6 @@ javafx {
 runtime {
     options.set(listOf("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages"))
     modules.set(listOf("java.naming", "java.desktop", "jdk.unsupported", "jdk.httpserver", "jdk.crypto.ec"))
-    imageDir.set(file("$buildDir/release"))
 }
 
 tasks {
@@ -51,7 +56,7 @@ tasks {
     compileTestKotlin { kotlinOptions.jvmTarget = compileKotlin.get().kotlinOptions.jvmTarget }
     wrapper { gradleVersion = "6.6.1" }
 
-    @Suppress("UNUSED_VARIABLE") val release by registering {
+    val release by registering {
         group = "distribution"
         dependsOn(runtime)
 
@@ -62,8 +67,52 @@ tasks {
             }
 
             val extForRemove = if (!isFamily(FAMILY_WINDOWS)) ".bat" else ""
-
             file("${runtime.get().imageDir}/bin/${project.name}${extForRemove}").delete()
         }
+    }
+
+    setupBuilder {
+        vendor = "Dmitry Oshurkov"
+        application = if (isFamily(FAMILY_WINDOWS)) "Video-downloader" else project.name
+        description = if (isFamily(FAMILY_WINDOWS)) "«Video-downloader»" else project.description
+        appIdentifier = project.name
+        version = project.version.toString()
+        icons = "src/main/resources/video-downloader.icns"
+
+        from(runtime.get().imageDir)
+        mainClass = project.application.mainClassName
+        mainJar = "lib/${project.name}-${project.version}-all.jar"
+
+        desktopStarter(closureOf<DesktopStarter> {
+            displayName = "Видеозагрузка"
+            description = "Загрузка видео из Youtube"
+            location = ApplicationMenu
+            categories = "AudioVideo;AudioVideoEditing;"
+            executable = if (isFamily(FAMILY_WINDOWS)) "bin/${project.name}.bat" else "bin/${project.name}"
+        })
+    }
+
+    val chmodX = "chmod +x \$INSTALLATION_ROOT/bin"
+
+    deb {
+        dependsOn(release)
+        homepage = "https://video-downloader.oshurkov.name"
+        maintainerEmail = "video-downloader@oshurkov.name"
+        postinst += listOf("$chmodX/${project.name}", "$chmodX/java", "$chmodX/keytool")
+    }
+
+    msi { dependsOn(release) }
+
+    val createChecksums by registering(Checksum::class) {
+        files = fileTree(setupBuilder.destinationDir)
+        outputDir = setupBuilder.destinationDir
+        algorithm = SHA256
+    }
+
+    @Suppress("UNUSED_VARIABLE")
+    val distribution by registering {
+        group = "distribution"
+        dependsOn(if (isFamily(FAMILY_WINDOWS)) msi else deb)
+        finalizedBy(createChecksums)
     }
 }
