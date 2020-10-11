@@ -25,7 +25,7 @@ fun placeToQueue(url: String?) = url
 fun DownloadJob.delete() = run {
 
     if (file != null)
-        File(file).delete()
+        File(file!!).delete()
 
     Files.find(outDir.toPath(), 1, { path, _ -> path.toFile().name.matches("$title.*\\.part".toRegex()) })
         .forEach { path -> path.toFile().delete() }
@@ -84,7 +84,7 @@ private fun DownloadJob.runDownload() = run {
                 fileProperty().set(pathname)
         }
 
-        setCompletedAndSave(videoInfo, File(file))
+        setCompletedAndSave(videoInfo, File(file!!))
     }
 }
 

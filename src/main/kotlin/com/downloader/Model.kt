@@ -3,7 +3,6 @@
 package com.downloader
 
 import com.downloader.DownloadState.*
-import com.fasterxml.jackson.annotation.*
 import javafx.beans.property.*
 import javafx.embed.swing.*
 import javafx.scene.image.*
@@ -12,30 +11,42 @@ import java.io.*
 import java.util.*
 import javax.imageio.*
 
-@JsonIgnoreProperties("thumbnailImage", "progress", "speed", "eta")
-@JsonPropertyOrder("url", "title", "duration", "file", "fileSize", "videoFormat", "state")
 class DownloadJob(
     val url: String,
     title: String? = null,
-    thumbnail: String? = null,
     duration: String? = null,
     file: String? = null,
     fileSize: String? = null,
     videoFormat: String? = null,
+    state: DownloadState = NEW,
+    thumbnail: String? = null,
     progress: Number? = null,
     speed: String? = null,
     eta: String = "__:__",
-    state: DownloadState = NEW
 ) {
-    var title by property(title)
+    var title: String by property(title)
     fun titleProperty() = getProperty(DownloadJob::title)
 
-    fun tooltipProperty() = stringBinding(titleProperty(), url.toProperty()) { "$title\n\n$url" }
+    var duration: String by property(duration)
+    fun durationProperty() = getProperty(DownloadJob::duration)
 
-    var thumbnail by property(thumbnail)
+    var file: String? by property(file)
+    fun fileProperty() = getProperty(DownloadJob::file)
+
+    var fileSize: String by property(fileSize)
+    fun fileSizeProperty() = getProperty(DownloadJob::fileSize)
+
+    var videoFormat: String by property(videoFormat)
+    fun videoFormatProperty() = getProperty(DownloadJob::videoFormat)
+
+    var state: DownloadState by property(state)
+    fun stateProperty() = getProperty(DownloadJob::state)
+
+    var thumbnail: String by property(thumbnail)
     fun thumbnailProperty() = getProperty(DownloadJob::thumbnail)
 
-    var thumbnailImage by property {
+
+    private var thumbnailImage by property {
         val image = if (thumbnail != null) ByteArrayInputStream(Base64.getDecoder().decode(thumbnail)).use {
             SwingFXUtils.toFXImage(ImageIO.read(it), null)
         } else
@@ -45,31 +56,18 @@ class DownloadJob(
 
     fun thumbnailImageProperty() = getProperty(DownloadJob::thumbnailImage)
 
-    var duration by property(duration)
-    fun durationProperty() = getProperty(DownloadJob::duration)
-
-    var file by property(file)
-    fun fileProperty() = getProperty(DownloadJob::file)
-
-    var fileSize by property(fileSize)
-    fun fileSizeProperty() = getProperty(DownloadJob::fileSize)
-
-    var videoFormat by property(videoFormat)
-    fun videoFormatProperty() = getProperty(DownloadJob::videoFormat)
-
-    var progress by property(progress)
+    private var progress by property(progress)
     fun progressProperty() = getProperty(DownloadJob::progress)
 
-    var speed by property(speed)
+    private var speed by property(speed)
     fun speedProperty() = getProperty(DownloadJob::speed)
 
-    var eta by property(eta)
+    private var eta by property(eta)
     fun etaProperty() = getProperty(DownloadJob::eta)
 
-    var state by property(state)
-    fun stateProperty() = getProperty(DownloadJob::state)
+    fun tooltipProperty() = stringBinding(titleProperty(), url.toProperty()) { "$title\n\n$url" }
 
-    override fun toString() = title ?: ""
+    override fun toString() = title
 }
 
 enum class DownloadState { NEW, IN_PROGRESS, COMPLETED, ERROR }

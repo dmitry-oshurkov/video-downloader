@@ -209,7 +209,7 @@ class Main : View("Загрузка видео") {
         }
     }
 
-    private fun DownloadJob.showVideo() = runAsync { desktop.open(File(file)) }
+    private fun DownloadJob.showVideo() = runAsync { desktop.open(File(file!!)) }
     private fun DownloadJob.browseVideoUrl() = runAsync { desktop.browse(URI(url)) }
 
     private fun runClipboardMonitor() = GlobalScope.launch {
