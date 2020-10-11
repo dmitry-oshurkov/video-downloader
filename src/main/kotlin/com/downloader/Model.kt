@@ -12,8 +12,8 @@ import java.io.*
 import java.util.*
 import javax.imageio.*
 
-@JsonIgnoreProperties("thumbnailImage")
-@JsonPropertyOrder("url", "title", "duration", "file", "fileSize", "videoFormat", "progress", "speed", "eta", "state")
+@JsonIgnoreProperties("thumbnailImage", "eta")
+@JsonPropertyOrder("url", "title", "duration", "file", "fileSize", "videoFormat", "progress", "speed", "state")
 class DownloadJob(
     val url: String,
     title: String = "Получение информации",
