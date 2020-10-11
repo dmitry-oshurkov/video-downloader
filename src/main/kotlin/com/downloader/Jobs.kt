@@ -18,42 +18,31 @@ fun placeToQueue(url: String?) = url
     ?.takeIf { it !in jobs.map { job -> job.url } }
     ?.takeIf { it.isYoutubeUrl() }
     ?.let {
-        DownloadJob(
-            pos = jobs.maxOfOrNull { job -> job.pos }?.inc() ?: 1,
-            url = it,
-            title = it
-        )
-    }
-    ?.also {
-        it.save()
-        jobs.add(it)
+        jobs += DownloadJob(url = it, title = it)
+        saveJobs()
     }
 
-fun DownloadJob.delete() = File(jobsDir, makeJobFileName())
-    .takeIf { it.exists() }
-    ?.also {
-        it.delete()
-        if (file != null)
-            File(file).delete()
+fun DownloadJob.delete() = run {
 
-        Files.find(outDir.toPath(), 1, { path, _ -> path.toFile().name.matches("$title.*\\.part".toRegex()) })
-            .forEach { path -> path.toFile().delete() }
+    if (file != null)
+        File(file).delete()
 
-        jobs.remove(this)
-    }
+    Files.find(outDir.toPath(), 1, { path, _ -> path.toFile().name.matches("$title.*\\.part".toRegex()) })
+        .forEach { path -> path.toFile().delete() }
+
+    jobs.remove(this)
+    saveJobs()
+}
 
 fun loadJobs() {
 
-    jobs += jobsDir
-        .apply { mkdirs() }
-        .listFiles()
-        .orEmpty()
-        .map { it.readText().parseJson<DownloadJob>() }
-        .sortedBy { it.pos }
-        .onEach {
-            if (it.state != COMPLETED && it.state != ERROR)
-                it.state = NEW
-        }
+    if (jobsFile.exists())
+        jobs += jobsFile.readText()
+            .parseJson<List<DownloadJob>>()
+            .onEach {
+                if (it.state == IN_PROGRESS)
+                    it.state = NEW
+            }
 }
 
 fun runJobMonitor() = GlobalScope.launch {
@@ -120,12 +109,10 @@ private fun DownloadJob.setCompletedAndSave(videoInfo: YoutubeVideo, file: File)
     val format = videoInfo.formats?.single { it.format_id == videoInfo.format_id?.split("+")?.first() }
     videoFormatProperty().set("${file.extension.toUpperCase()} · ${format?.format_note} · ${format?.fps} к/с")
 
-    save()
+    saveJobs()
 }
 
-private fun DownloadJob.save() = File(jobsDir, makeJobFileName()).writeText(toJson())
-
-private fun DownloadJob.makeJobFileName() = url.hashCode().toString()
+private fun saveJobs() = jobsFile.writeText(jobs.toJson())
 
 private fun humanReadableByteCountSI(bytesValue: Long) = run {
 
@@ -165,5 +152,5 @@ private val downloadProgress = """\[download\]\s+(.*)%\s+of\s+([\d.]*)(GiB|MiB|K
 private val downloaded = """Merging formats into "([\s\S]*?)"""".toRegex()
 private val alreadyDownloaded = """\[download\]\s+(.*)\s+has""".toRegex()
 
-private val jobsDir = File("$localShare/$APP_NAME/jobs")
+private val jobsFile = File("$localShare/$APP_NAME/jobs.json")
 private val outFile = File(outDir, "%(title)s.%(ext)s").absolutePath
