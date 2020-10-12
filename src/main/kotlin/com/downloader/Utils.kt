@@ -15,7 +15,7 @@ import java.util.*
 import javax.imageio.*
 
 fun execYoutubeDl(vararg args: String, progress: (String) -> Unit) = ProcessExecutor()
-    .command(listOf("youtube-dl", *args))
+    .command(listOf("python3", "/usr/share/video-downloader/bin/youtube-dl", *args)) // todo detect youtube-dl path
     .redirectOutput(object : LogOutputStream() {
         override fun processLine(line: String) {
             progress(line)

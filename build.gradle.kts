@@ -56,9 +56,15 @@ tasks {
     compileTestKotlin { kotlinOptions.jvmTarget = compileKotlin.get().kotlinOptions.jvmTarget }
     wrapper { gradleVersion = "6.6.1" }
 
+    val copyYoutubeDl by registering(Copy::class) {
+        dependsOn(runtime)
+        from(if (isFamily(FAMILY_WINDOWS)) "setup/youtube-dl.exe" else "setup/youtube-dl")
+        into("${runtime.get().imageDir}/bin")
+    }
+
     val release by registering {
         group = "distribution"
-        dependsOn(runtime)
+        dependsOn(runtime, copyYoutubeDl)
 
         doFirst {
             with(file("${runtime.get().imageDir}/release")) {
@@ -98,7 +104,8 @@ tasks {
         dependsOn(release)
         homepage = "https://video-downloader.oshurkov.name"
         maintainerEmail = "video-downloader@oshurkov.name"
-        postinst += listOf("$chmodX/${project.name}", "$chmodX/java", "$chmodX/keytool")
+        depends = "python3"
+        postinst += listOf("$chmodX/${project.name}", "$chmodX/java", "$chmodX/keytool", "$chmodX/youtube-dl")
     }
 
     msi { dependsOn(release) }
