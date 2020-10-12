@@ -77,7 +77,7 @@ tasks {
         description = if (isFamily(FAMILY_WINDOWS)) "«Video-downloader»" else project.description
         appIdentifier = project.name
         version = project.version.toString()
-        icons = "src/main/resources/video-downloader.icns"
+        icons = "setup/app.icns"
 
         from(runtime.get().imageDir)
         mainClass = project.application.mainClassName
