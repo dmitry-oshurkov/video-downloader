@@ -48,7 +48,7 @@ javafx {
 
 runtime {
     options.set(listOf("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages"))
-    modules.set(listOf("java.naming", "java.desktop", "jdk.unsupported", "jdk.httpserver", "jdk.crypto.ec"))
+    modules.set(listOf("java.desktop", "java.sql", "jdk.unsupported", "jdk.httpserver", "jdk.crypto.ec"))
 }
 
 tasks {
