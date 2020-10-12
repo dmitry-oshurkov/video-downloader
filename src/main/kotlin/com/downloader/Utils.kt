@@ -9,8 +9,6 @@ import org.zeroturnaround.exec.*
 import org.zeroturnaround.exec.stream.*
 import tornadofx.*
 import java.io.*
-import java.nio.file.*
-import java.nio.file.attribute.PosixFilePermission.*
 import java.util.*
 import javax.imageio.*
 
@@ -49,15 +47,6 @@ fun EventTarget.glyph(value: String, op: Label.() -> Unit = {}) {
 fun String.isYoutubeUrl() = startsWith("https://www.youtube.com/watch") || startsWith("https://youtu.be/")
 
 
-private infix fun String.copyResourceTo(path: Path) {
-
-    Application::class.java.getResourceAsStream(this)
-        .use { Files.copy(it, path) }
-
-    Files.setPosixFilePermissions(path, HashSet(listOf(OWNER_READ, OWNER_WRITE, OWNER_EXECUTE)))
-}
-
-
 const val APP_NAME = "video-downloader"
 
 private val userHome = System.getProperty("user.home")
@@ -66,4 +55,3 @@ val localShare = "$userHome/.local/share"
 val outDir = File("$userHome/Загрузки/.$APP_NAME")
 
 private val configDir = File("$userHome/.config/$APP_NAME")
-private val appLink = File("$localShare/applications/$APP_NAME.desktop")
