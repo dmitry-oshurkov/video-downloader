@@ -29,5 +29,5 @@ jobs:
       with:
 #         name: video-downloader
         # A file, directory or wildcard pattern that describes what to upload
-        path: build/**/*
-        retention-days: 3
+        path: build/distributions/video-downloader-*
+        retention-days: 365
