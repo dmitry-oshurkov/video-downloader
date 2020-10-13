@@ -3,10 +3,10 @@ package com.downloader.view
 import com.downloader.*
 import com.downloader.DownloadState.*
 import com.downloader.Styles.Companion.backImage
-import com.downloader.Styles.Companion.downloadButton
 import com.downloader.Styles.Companion.jobTitle
 import com.downloader.Styles.Companion.main
 import com.downloader.Styles.Companion.progressLabels
+import com.downloader.Styles.Companion.toolButton
 import com.downloader.Styles.Companion.videoButton
 import javafx.geometry.Pos.*
 import javafx.scene.control.SelectionMode.*
@@ -49,10 +49,22 @@ class Main : View("Видеозагрузка") {
                         val url = clipboard.getContent(PLAIN_TEXT) as? String
                         placeToQueue(url)
                     }
+                    graphic = imageview("images/youtube.png")
                     prefHeight = 40.0
                     isFocusTraversable = false
-                    addClass(downloadButton)
+                    addClass(toolButton)
                     enableWhen(canDownload)
+                }
+
+                region { hgrow = ALWAYS }
+
+                button("Помочь проекту") {
+                    action {
+                    }
+                    graphic = imageview("images/donate.png")
+                    prefHeight = 40.0
+                    isFocusTraversable = false
+                    addClass(toolButton)
                 }
             }
 

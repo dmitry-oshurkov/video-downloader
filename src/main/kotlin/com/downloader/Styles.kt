@@ -15,7 +15,7 @@ class Styles : Stylesheet() {
         val backImage by cssclass()
         val jobTitle by cssclass()
         val progressLabels by cssclass()
-        val downloadButton by cssclass()
+        val toolButton by cssclass()
         val videoButton by cssclass()
         val glyphLabel by cssclass()
     }
@@ -50,7 +50,7 @@ class Styles : Stylesheet() {
             fontFamily = "DejaVu Sans Mono"
         }
 
-        downloadButton {
+        toolButton {
             fontSize = 14.px
             fontWeight = BOLD
 
