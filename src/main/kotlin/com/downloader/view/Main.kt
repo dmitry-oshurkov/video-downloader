@@ -8,7 +8,9 @@ import com.downloader.Styles.Companion.main
 import com.downloader.Styles.Companion.progressLabels
 import com.downloader.Styles.Companion.toolButton
 import com.downloader.Styles.Companion.videoButton
+import javafx.beans.binding.*
 import javafx.geometry.Pos.*
+import javafx.scene.control.*
 import javafx.scene.control.SelectionMode.*
 import javafx.scene.input.DataFormat.*
 import javafx.scene.layout.Priority.*
@@ -21,6 +23,9 @@ import java.net.*
 class Main : View("Видеозагрузка") {
 
     private val canDownload = false.toProperty()
+    private val donateIsPushed = Prefs.donateIsPushed.toProperty()
+    private val donateText = "Помочь проекту"
+    private val donateBtnText = stringBinding(donateIsPushed) { if (value) null else donateText }
 
     init {
         runClipboardMonitor()
@@ -58,9 +63,14 @@ class Main : View("Видеозагрузка") {
 
                 region { hgrow = ALWAYS }
 
-                button("Помочь проекту") {
+                button(donateBtnText) {
                     action {
+                        runAsync { desktop.browse(URI("https://video-downloader.website/")) }
+                        donateIsPushed.value = true
+                        Prefs.donateIsPushed = true
+                        Prefs.save()
                     }
+                    tooltipProperty().bind(Bindings.`when`(donateIsPushed).then(Tooltip(donateText)).otherwise(null as Tooltip?))
                     graphic = imageview("images/donate.png")
                     prefHeight = 40.0
                     isFocusTraversable = false
