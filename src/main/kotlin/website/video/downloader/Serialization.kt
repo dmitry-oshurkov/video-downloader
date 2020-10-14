@@ -1,4 +1,4 @@
-package com.downloader
+package website.video.downloader
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include.*
 import com.fasterxml.jackson.databind.*

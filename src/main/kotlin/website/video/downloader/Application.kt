@@ -1,9 +1,9 @@
-package com.downloader
+package website.video.downloader
 
-import com.downloader.view.*
 import com.sun.net.httpserver.*
 import javafx.stage.*
 import tornadofx.*
+import website.video.downloader.view.*
 import java.io.*
 import java.net.*
 

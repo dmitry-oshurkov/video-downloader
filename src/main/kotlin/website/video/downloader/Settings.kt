@@ -1,4 +1,4 @@
-package com.downloader
+package website.video.downloader
 
 import com.typesafe.config.*
 import io.github.config4k.*

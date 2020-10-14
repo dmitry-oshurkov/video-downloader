@@ -1,6 +1,5 @@
-package com.downloader
+package website.video.downloader
 
-import com.downloader.Styles.Companion.glyphLabel
 import javafx.embed.swing.*
 import javafx.event.*
 import javafx.scene.control.*
@@ -8,6 +7,7 @@ import javafx.scene.image.*
 import org.zeroturnaround.exec.*
 import org.zeroturnaround.exec.stream.*
 import tornadofx.*
+import website.video.downloader.Styles.Companion.glyphLabel
 import java.io.*
 import java.util.*
 import javax.imageio.*

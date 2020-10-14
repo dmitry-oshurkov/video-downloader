@@ -1,13 +1,5 @@
-package com.downloader.view
+package website.video.downloader.view
 
-import com.downloader.*
-import com.downloader.DownloadState.*
-import com.downloader.Styles.Companion.backImage
-import com.downloader.Styles.Companion.jobTitle
-import com.downloader.Styles.Companion.main
-import com.downloader.Styles.Companion.progressLabels
-import com.downloader.Styles.Companion.toolButton
-import com.downloader.Styles.Companion.videoButton
 import javafx.beans.binding.*
 import javafx.geometry.Pos.*
 import javafx.scene.control.*
@@ -16,6 +8,14 @@ import javafx.scene.input.DataFormat.*
 import javafx.scene.layout.Priority.*
 import kotlinx.coroutines.*
 import tornadofx.*
+import website.video.downloader.*
+import website.video.downloader.DownloadState.*
+import website.video.downloader.Styles.Companion.backImage
+import website.video.downloader.Styles.Companion.jobTitle
+import website.video.downloader.Styles.Companion.main
+import website.video.downloader.Styles.Companion.progressLabels
+import website.video.downloader.Styles.Companion.toolButton
+import website.video.downloader.Styles.Companion.videoButton
 import java.awt.*
 import java.io.*
 import java.net.*

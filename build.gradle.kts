@@ -14,7 +14,7 @@ plugins {
     id("org.gradle.crypto.checksum") version "1.2.0"
 }
 
-group = "com.downloader"
+group = "website.video.downloader"
 version = "20.2"
 description = "Видеозагрузка"
 
@@ -25,7 +25,7 @@ repositories {
 }
 
 application {
-    mainClassName = "com.downloader.MainKt"
+    mainClassName = "website.video.downloader.MainKt"
 }
 
 dependencies {

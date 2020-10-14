@@ -1,4 +1,4 @@
-package com.downloader
+package website.video.downloader
 
 import tornadofx.*
 import java.io.*

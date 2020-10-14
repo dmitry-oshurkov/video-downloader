@@ -1,12 +1,12 @@
 @file:Suppress("RegExpRedundantEscape")
 
-package com.downloader
+package website.video.downloader
 
-import com.downloader.DownloadState.*
 import javafx.embed.swing.*
 import javafx.scene.image.*
 import kotlinx.coroutines.*
 import tornadofx.*
+import website.video.downloader.DownloadState.*
 import java.io.*
 import java.net.*
 import java.nio.file.*

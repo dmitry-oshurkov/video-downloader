@@ -1,4 +1,4 @@
-package com.downloader
+package website.video.downloader
 
 import java.util.prefs.Preferences.*
 

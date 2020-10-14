@@ -1,12 +1,12 @@
 @file:Suppress("unused", "PropertyName")
 
-package com.downloader
+package website.video.downloader
 
-import com.downloader.DownloadState.*
 import javafx.beans.property.*
 import javafx.embed.swing.*
 import javafx.scene.image.*
 import tornadofx.*
+import website.video.downloader.DownloadState.*
 import java.io.*
 import java.util.*
 import javax.imageio.*

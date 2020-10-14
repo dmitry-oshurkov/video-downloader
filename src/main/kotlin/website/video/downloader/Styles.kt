@@ -1,4 +1,4 @@
-package com.downloader
+package website.video.downloader
 
 import javafx.scene.effect.*
 import javafx.scene.effect.BlurType.*
