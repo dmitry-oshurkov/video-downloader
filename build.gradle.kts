@@ -36,6 +36,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.3")
     implementation("org.zeroturnaround:zt-exec:1.12")
     implementation("org.sejda.imageio:webp-imageio:0.1.6")
+    implementation("io.github.config4k:config4k:0.4.2")
     implementation("org.slf4j:slf4j-jdk14:1.7.30")
 
     testImplementation(kotlin("test-junit"))

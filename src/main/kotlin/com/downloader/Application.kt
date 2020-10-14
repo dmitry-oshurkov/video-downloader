@@ -9,7 +9,7 @@ import java.net.*
 
 class Application : App(Main::class, Styles::class) {
 
-    private val httpServer = HttpServer.create(InetSocketAddress("127.0.0.1", 9533), 0)
+    private val httpServer = HttpServer.create(InetSocketAddress("127.0.0.1", appConfig.urlListenerPort), 0)
 
     override fun start(stage: Stage) {
 

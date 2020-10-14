@@ -21,7 +21,7 @@ fun execYoutubeDl(vararg args: String, progress: (String) -> Unit) = ProcessExec
     })
     .execute()!!
 
-fun openOutDirInFiles() = Runtime.getRuntime().exec("nemo $outDir")!!
+fun openOutDirInFiles() = Runtime.getRuntime().exec("nemo ${appConfig.downloadDir}")!!
 
 fun imageToBase64(image: Image) = ByteArrayOutputStream().use {
     ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", it)
@@ -49,9 +49,5 @@ fun String.isYoutubeUrl() = startsWith("https://www.youtube.com/watch") || start
 
 const val APP_NAME = "video-downloader"
 
-private val userHome = System.getProperty("user.home")
-
-val localShare = "$userHome/.local/share"
-val outDir = File("$userHome/Загрузки/.$APP_NAME")
-
-private val configDir = File("$userHome/.config/$APP_NAME")
+val LINE_SEPARATOR = System.lineSeparator()!!
+val USER_HOME = System.getProperty("user.home")!!

@@ -27,7 +27,7 @@ fun DownloadJob.delete() = run {
     if (file != null)
         File(file!!).delete()
 
-    Files.find(outDir.toPath(), 1, { path, _ -> path.toFile().name.matches("$title.*\\.part".toRegex()) })
+    Files.find(Path.of(appConfig.downloadDir), 1, { path, _ -> path.toFile().name.matches("$title.*\\.part".toRegex()) })
         .forEach { path -> path.toFile().delete() }
 
     jobs.remove(this)
@@ -154,5 +154,6 @@ private val downloadProgress = """\[download\]\s+(.*)%\s+of\s+([\d.]*)(GiB|MiB|K
 private val downloaded = """Merging formats into "([\s\S]*?)"""".toRegex()
 private val alreadyDownloaded = """\[download\]\s+(.*)\s+has""".toRegex()
 
+private val localShare = "$USER_HOME/.local/share"
 private val jobsFile = File("$localShare/$APP_NAME/jobs.json")
-private val outFile = File(outDir, "%(title)s.%(ext)s").absolutePath
+private val outFile = File(appConfig.downloadDir, "%(title)s.%(ext)s").absolutePath
