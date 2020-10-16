@@ -18,8 +18,11 @@ fun loadConfig() = configFile
 fun writeConfig(appConfig: AppConfig) {
 
     val cfg = mapOf(
+        "# ru-RU, en_US locales is supported" to "",
         "locale" to appConfig.locale,
+        "# downloaded videos local storage" to "",
         "downloadDir" to appConfig.downloadDir,
+        "# port for listen url from browser extension" to "",
         "urlListenerPort" to appConfig.urlListenerPort
     )
         .renderConfig()
@@ -28,9 +31,15 @@ fun writeConfig(appConfig: AppConfig) {
     configFile.writeText(cfg)
 }
 
-private fun Map<String, Any>.renderConfig() = map { (key, config) -> config.toConfig(key).root().render(renderOptions) }
-    .joinToString(LINE_SEPARATOR)
-    .replace("\n", LINE_SEPARATOR)
+private fun Map<String, Any>.renderConfig() =
+    map { (key, config) ->
+        if (key.startsWith("#") || key.startsWith("//"))
+            key
+        else
+            config.toConfig(key).root().render(renderOptions)
+    }
+        .joinToString(LINE_SEPARATOR)
+        .replace("\n", LINE_SEPARATOR)
 
 private val renderOptions = ConfigRenderOptions.concise().setJson(false).setFormatted(true).setComments(true)
 
