@@ -5,6 +5,7 @@ import io.github.config4k.*
 import java.io.*
 
 data class AppConfig(
+    val locale: String,
     val downloadDir: String,
     val urlListenerPort: Int
 )
@@ -17,6 +18,7 @@ fun loadConfig() = configFile
 fun writeConfig(appConfig: AppConfig) {
 
     val cfg = mapOf(
+        "locale" to appConfig.locale,
         "downloadDir" to appConfig.downloadDir,
         "urlListenerPort" to appConfig.urlListenerPort
     )

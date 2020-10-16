@@ -20,14 +20,15 @@ import java.awt.*
 import java.io.*
 import java.net.*
 
-class Main : View("Видеозагрузка") {
+class Main : View() {
 
     private val canDownload = false.toProperty()
     private val donateIsPushed = Prefs.donateIsPushed.toProperty()
-    private val donateText = "Помочь проекту"
+    private val donateText = messages["main.btn.donate"]
     private val donateBtnText = stringBinding(donateIsPushed) { if (value) null else donateText }
 
     init {
+        title = messages["main.title"]
         runClipboardMonitor()
     }
 
@@ -49,7 +50,7 @@ class Main : View("Видеозагрузка") {
                 padding = insets(5.0, 0.0, 0.0, 5.0)
                 onDoubleClick { openOutDirInFiles() }
 
-                button("Вставить ссылку") {
+                button(messages["main.btn.paste-link"]) {
                     action {
                         val url = clipboard.getContent(PLAIN_TEXT) as? String
                         placeToQueue(url)
@@ -193,18 +194,18 @@ class Main : View("Видеозагрузка") {
                                             bottomAnchor = 0
                                         }
 
-                                        button("Просмотр", "images/play-icon.png") {
+                                        button(messages["main.btn.play"], "images/play-icon.png") {
                                             enableWhen(completed)
                                             action { item.showVideo() }
                                             addClass(videoButton)
                                         }
 
-                                        button("Открыть ссылку", "images/web-browser-icon.png") {
+                                        button(messages["main.btn.browse"], "images/web-browser-icon.png") {
                                             action { item.browseVideoUrl() }
                                             addClass(videoButton)
                                         }
 
-                                        button("Удалить", "images/remove-icon.png") {
+                                        button(messages["main.btn.delete"], "images/remove-icon.png") {
                                             action { item.delete() }
                                             addClass(videoButton)
                                         }

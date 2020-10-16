@@ -6,8 +6,13 @@ import tornadofx.*
 import website.video.downloader.view.*
 import java.io.*
 import java.net.*
+import java.util.*
 
 class Application : App(Main::class, Styles::class) {
+
+    init {
+        FX.locale = Locale(appConfig.locale)
+    }
 
     private val httpServer = HttpServer.create(InetSocketAddress("127.0.0.1", appConfig.urlListenerPort), 0)
 

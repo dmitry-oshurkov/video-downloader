@@ -2,6 +2,7 @@ package website.video.downloader
 
 import tornadofx.*
 import java.io.*
+import java.util.*
 
 fun main() {
 
@@ -12,6 +13,7 @@ fun main() {
             .let { File("$it/.$APP_NAME") }
 
         writeConfig(AppConfig(
+            locale = Locale.getDefault().toLanguageTag(),
             downloadDir = downloadDir.absolutePath,
             urlListenerPort = 9533
         ))

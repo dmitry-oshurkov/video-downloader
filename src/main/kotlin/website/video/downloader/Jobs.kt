@@ -6,6 +6,7 @@ import javafx.embed.swing.*
 import javafx.scene.image.*
 import kotlinx.coroutines.*
 import tornadofx.*
+import tornadofx.FX.Companion.messages
 import website.video.downloader.DownloadState.*
 import java.io.*
 import java.net.*
@@ -109,7 +110,7 @@ private fun DownloadJob.setCompletedAndSave(videoInfo: YoutubeVideo, file: File)
     stateProperty().set(COMPLETED)
 
     val format = videoInfo.formats?.single { it.format_id == videoInfo.format_id?.split("+")?.first() }
-    videoFormatProperty().set("${file.extension.toUpperCase()} · ${format?.format_note} · ${format?.fps} к/с")
+    videoFormatProperty().set("${file.extension.toUpperCase()} · ${format?.format_note} · ${format?.fps} ${messages["jobs.units.fps"]}")
 
     saveJobs()
 }
@@ -122,28 +123,28 @@ private fun humanReadableByteCountSI(bytesValue: Long) = run {
 
     when {
 
-        -1000 < bytes && bytes < 1000 -> "$bytes Б"
+        -1000 < bytes && bytes < 1000 -> "$bytes ${messages["jobs.byte.human"]}"
 
         else -> {
-            val ci = StringCharacterIterator("кМГТПЭ")
+            val ci = StringCharacterIterator(messages["jobs.bytes.human"])
 
             while (bytes <= -999950 || bytes >= 999950) {
                 bytes /= 1000
                 ci.next()
             }
 
-            String.format("%.1f %cБ", bytes / 1000.0, ci.current())
+            String.format("%.1f %c${messages["jobs.byte.human"]}", bytes / 1000.0, ci.current())
         }
     }
 }
 
 private fun convertUnits(value: String?) = when (value) {
-    "GiB" -> "ГБ"
-    "MiB" -> "МБ"
-    "KiB" -> "КБ"
-    "GiB/s" -> "ГБ/с"
-    "MiB/s" -> "МБ/с"
-    "KiB/s" -> "КБ/с"
+    "GiB" -> messages["jobs.units.GiB"]
+    "MiB" -> messages["jobs.units.MiB"]
+    "KiB" -> messages["jobs.units.KiB"]
+    "GiB/s" -> messages["jobs.units.GiB/s"]
+    "MiB/s" -> messages["jobs.units.MiB/s"]
+    "KiB/s" -> messages["jobs.units.KiB/s"]
     else -> ""
 }
 
