@@ -43,7 +43,7 @@ fun loadJobs() {
             .onEach {
                 if (it.state == IN_PROGRESS)
                     it.state = NEW
-                it.setFileSizeAndFormatText(it.file?.let { s -> File(s) }, it.format)
+                it.setFileSizeText()
             }
 }
 
@@ -83,7 +83,7 @@ private fun Job.runDownload() = run {
                 setProgress(groups)
 
             if (pathname != null)
-                fileProperty().set(pathname)
+                runLater { fileProperty().set(pathname) }
         }
 
         setCompletedAndSave(videoInfo, File(file!!))
@@ -113,14 +113,13 @@ private fun Job.setCompletedAndSave(videoInfo: YoutubeVideo, file: File) = runLa
     val format = videoInfo.formats?.single { it.format_id == videoInfo.format_id?.split("+")?.first() }
     formatProperty().set(format?.format_note)
     fpsProperty().set(format?.fps)
-    setFileSizeAndFormatText(file, formatProperty().get())
+    setFileSizeText()
 
     saveJobs()
 }
 
-private fun Job.setFileSizeAndFormatText(file: File?, format: String?) {
+private fun Job.setFileSizeText() {
     fileSize?.let { fileSizeTextProperty().set(humanReadableByteCountSI(it)) }
-    file?.let { formatTextProperty().set("${file.extension.toUpperCase()} · $format · $fps ${messages["jobs.units.fps"]}") }
 }
 
 private fun saveJobs() = jobsFile.writeText(jobs.toJson())

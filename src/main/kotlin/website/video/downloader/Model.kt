@@ -6,6 +6,7 @@ import javafx.beans.property.*
 import javafx.embed.swing.*
 import javafx.scene.image.*
 import tornadofx.*
+import tornadofx.FX.Companion.messages
 import website.video.downloader.DownloadState.*
 import java.io.*
 import java.util.*
@@ -66,13 +67,16 @@ class Job(
     private var eta: String by property()
     fun etaProperty() = getProperty(Job::eta)
 
-    private var formatText: String by property()
-    fun formatTextProperty() = getProperty(Job::formatText)
+    fun formatTextProperty() = stringBinding(fileProperty(), formatProperty(), fpsProperty()) {
+        file?.let { "${File(it).extension.toUpperCase()} · $format · $fps ${messages["jobs.units.fps"]}" }
+    }
 
     private var fileSizeText: String by property()
     fun fileSizeTextProperty() = getProperty(Job::fileSizeText)
 
-    fun tooltipProperty() = stringBinding(titleProperty(), url.toProperty()) { "$title\n\n$url" }
+    fun tooltipProperty() = stringBinding(titleProperty(), url.toProperty()) {
+        "$title\n\n$url"
+    }
 
     override fun toString() = title
 }
