@@ -10,6 +10,7 @@ import kotlinx.coroutines.*
 import tornadofx.*
 import website.video.downloader.*
 import website.video.downloader.DownloadState.*
+import website.video.downloader.Job
 import website.video.downloader.Styles.Companion.backImage
 import website.video.downloader.Styles.Companion.jobTitle
 import website.video.downloader.Styles.Companion.main
@@ -168,7 +169,7 @@ class Main : View() {
 
                                             hbox {
                                                 spacing = 5.0
-                                                visibleWhen(it.speedProperty().isNotNull.or(it.videoFormatProperty().isNotNull))
+                                                visibleWhen(it.speedProperty().isNotNull.or(it.formatProperty().isNotNull))
 
                                                 glyph("\uf40b") {
                                                     removeWhen(completed)
@@ -179,7 +180,7 @@ class Main : View() {
                                                     removeWhen(completed)
                                                 }
 
-                                                label(it.videoFormatProperty()) {
+                                                label(it.formatProperty()) {
                                                     visibleWhen(completed)
                                                 }
                                             }
@@ -226,8 +227,8 @@ class Main : View() {
     }
 
     private val desktop = Desktop.getDesktop()
-    private fun DownloadJob.showVideo() = runAsync { desktop.open(File(file!!)) }
-    private fun DownloadJob.browseVideoUrl() = runAsync { desktop.browse(URI(url)) }
+    private fun Job.showVideo() = runAsync { desktop.open(File(file!!)) }
+    private fun Job.browseVideoUrl() = runAsync { desktop.browse(URI(url)) }
 
     private fun runClipboardMonitor() = GlobalScope.launch {
 

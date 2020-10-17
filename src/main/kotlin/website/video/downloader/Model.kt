@@ -11,13 +11,13 @@ import java.io.*
 import java.util.*
 import javax.imageio.*
 
-class DownloadJob(
+class Job(
     val url: String,
     title: String? = null,
     duration: String? = null,
     file: String? = null,
     fileSize: String? = null,
-    videoFormat: String? = null,
+    format: String? = null,
     state: DownloadState = NEW,
     thumbnail: String? = null,
     progress: Number? = null,
@@ -25,25 +25,25 @@ class DownloadJob(
     eta: String = "__:__",
 ) {
     var title: String by property(title)
-    fun titleProperty() = getProperty(DownloadJob::title)
+    fun titleProperty() = getProperty(Job::title)
 
     var duration: String by property(duration)
-    fun durationProperty() = getProperty(DownloadJob::duration)
+    fun durationProperty() = getProperty(Job::duration)
 
     var file: String? by property(file)
-    fun fileProperty() = getProperty(DownloadJob::file)
+    fun fileProperty() = getProperty(Job::file)
 
     var fileSize: String by property(fileSize)
-    fun fileSizeProperty() = getProperty(DownloadJob::fileSize)
+    fun fileSizeProperty() = getProperty(Job::fileSize)
 
-    var videoFormat: String by property(videoFormat)
-    fun videoFormatProperty() = getProperty(DownloadJob::videoFormat)
+    var format: String by property(format)
+    fun formatProperty() = getProperty(Job::format)
 
     var state: DownloadState by property(state)
-    fun stateProperty() = getProperty(DownloadJob::state)
+    fun stateProperty() = getProperty(Job::state)
 
     var thumbnail: String by property(thumbnail)
-    fun thumbnailProperty() = getProperty(DownloadJob::thumbnail)
+    fun thumbnailProperty() = getProperty(Job::thumbnail)
 
 
     private var thumbnailImage by property {
@@ -54,16 +54,16 @@ class DownloadJob(
         SimpleObjectProperty(image as? Image)
     }
 
-    fun thumbnailImageProperty() = getProperty(DownloadJob::thumbnailImage)
+    fun thumbnailImageProperty() = getProperty(Job::thumbnailImage)
 
     private var progress by property(progress)
-    fun progressProperty() = getProperty(DownloadJob::progress)
+    fun progressProperty() = getProperty(Job::progress)
 
     private var speed by property(speed)
-    fun speedProperty() = getProperty(DownloadJob::speed)
+    fun speedProperty() = getProperty(Job::speed)
 
     private var eta by property(eta)
-    fun etaProperty() = getProperty(DownloadJob::eta)
+    fun etaProperty() = getProperty(Job::eta)
 
     fun tooltipProperty() = stringBinding(titleProperty(), url.toProperty()) { "$title\n\n$url" }
 

@@ -19,11 +19,11 @@ fun placeToQueue(url: String?) = url
     ?.takeIf { it !in jobs.map { job -> job.url } }
     ?.takeIf { it.isYoutubeUrl() }
     ?.let {
-        jobs += DownloadJob(url = it, title = it)
+        jobs += Job(url = it, title = it)
         saveJobs()
     }
 
-fun DownloadJob.delete() = run {
+fun Job.delete() = run {
 
     if (file != null)
         File(file!!).delete()
@@ -39,7 +39,7 @@ fun loadJobs() {
 
     if (jobsFile.exists())
         jobs += jobsFile.readText()
-            .parseJson<List<DownloadJob>>()
+            .parseJson<List<Job>>()
             .onEach {
                 if (it.state == IN_PROGRESS)
                     it.state = NEW
@@ -55,7 +55,7 @@ fun runJobMonitor() = GlobalScope.launch {
 }
 
 
-private fun DownloadJob.runDownload() = run {
+private fun Job.runDownload() = run {
 
     runLater { stateProperty().set(IN_PROGRESS) }
     execYoutubeDl("--dump-json", url) {
@@ -89,7 +89,7 @@ private fun DownloadJob.runDownload() = run {
     }
 }
 
-private fun DownloadJob.setInfo(videoInfo: YoutubeVideo, thumbnail: String, thumbnailImage: Image) = runLater {
+private fun Job.setInfo(videoInfo: YoutubeVideo, thumbnail: String, thumbnailImage: Image) = runLater {
     titleProperty().set(videoInfo.title)
     thumbnailProperty().set(thumbnail)
     thumbnailImageProperty().set(thumbnailImage)
@@ -98,19 +98,19 @@ private fun DownloadJob.setInfo(videoInfo: YoutubeVideo, thumbnail: String, thum
     saveJobs()
 }
 
-private fun DownloadJob.setProgress(groups: MatchGroupCollection) = runLater {
+private fun Job.setProgress(groups: MatchGroupCollection) = runLater {
     progressProperty().set(groups[1]?.value?.toDouble()?.div(100))
     fileSizeProperty().set("${groups[2]?.value} ${convertUnits(groups[3]?.value)}")
     speedProperty().set("${groups[4]?.value} ${convertUnits(groups[5]?.value)}".padStart(12))
     etaProperty().set(groups[6]?.value)
 }
 
-private fun DownloadJob.setCompletedAndSave(videoInfo: YoutubeVideo, file: File) = runLater {
+private fun Job.setCompletedAndSave(videoInfo: YoutubeVideo, file: File) = runLater {
     fileSizeProperty().set(humanReadableByteCountSI(file.length()))
     stateProperty().set(COMPLETED)
 
     val format = videoInfo.formats?.single { it.format_id == videoInfo.format_id?.split("+")?.first() }
-    videoFormatProperty().set("${file.extension.toUpperCase()} · ${format?.format_note} · ${format?.fps} ${messages["jobs.units.fps"]}")
+    formatProperty().set("${file.extension.toUpperCase()} · ${format?.format_note} · ${format?.fps} ${messages["jobs.units.fps"]}")
 
     saveJobs()
 }
@@ -149,7 +149,7 @@ private fun convertUnits(value: String?) = when (value) {
 }
 
 
-val jobs = mutableListOf<DownloadJob>().asObservable()
+val jobs = mutableListOf<Job>().asObservable()
 
 private val downloadProgress = """\[download\]\s+(.*)%\s+of\s+([\d.]*)(GiB|MiB|KiB).+at\s+([\d.]*)(GiB\/s|MiB\/s|KiB\/s).+ETA\s+([\d:]*)""".toRegex()
 private val downloaded = """Merging formats into "([\s\S]*?)"""".toRegex()
