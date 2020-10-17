@@ -144,10 +144,10 @@ class Main : View() {
 
                                             hbox {
                                                 spacing = 5.0
-                                                visibleWhen(it.fileSizeProperty().isNotNull)
+                                                visibleWhen(it.fileSizeTextProperty().isNotNull)
 
                                                 glyph("\uf318")
-                                                label(it.fileSizeProperty())
+                                                label(it.fileSizeTextProperty())
                                             }
                                         }
 
@@ -180,7 +180,7 @@ class Main : View() {
                                                     removeWhen(completed)
                                                 }
 
-                                                label(it.formatProperty()) {
+                                                label(it.formatTextProperty()) {
                                                     visibleWhen(completed)
                                                 }
                                             }

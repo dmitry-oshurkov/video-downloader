@@ -13,16 +13,14 @@ import javax.imageio.*
 
 class Job(
     val url: String,
-    title: String? = null,
+    title: String,
     duration: String? = null,
     file: String? = null,
-    fileSize: String? = null,
+    fileSize: Long? = null,
     format: String? = null,
+    fps: Int? = null,
     state: DownloadState = NEW,
     thumbnail: String? = null,
-    progress: Number? = null,
-    speed: String? = null,
-    eta: String = "__:__",
 ) {
     var title: String by property(title)
     fun titleProperty() = getProperty(Job::title)
@@ -33,11 +31,14 @@ class Job(
     var file: String? by property(file)
     fun fileProperty() = getProperty(Job::file)
 
-    var fileSize: String by property(fileSize)
+    var fileSize: Long? by property(fileSize)
     fun fileSizeProperty() = getProperty(Job::fileSize)
 
     var format: String by property(format)
     fun formatProperty() = getProperty(Job::format)
+
+    var fps: Int? by property(fps)
+    fun fpsProperty() = getProperty(Job::fps)
 
     var state: DownloadState by property(state)
     fun stateProperty() = getProperty(Job::state)
@@ -56,14 +57,20 @@ class Job(
 
     fun thumbnailImageProperty() = getProperty(Job::thumbnailImage)
 
-    private var progress by property(progress)
+    private var progress: Number by property()
     fun progressProperty() = getProperty(Job::progress)
 
-    private var speed by property(speed)
+    private var speed: String by property()
     fun speedProperty() = getProperty(Job::speed)
 
-    private var eta by property(eta)
+    private var eta: String by property()
     fun etaProperty() = getProperty(Job::eta)
+
+    private var formatText: String by property()
+    fun formatTextProperty() = getProperty(Job::formatText)
+
+    private var fileSizeText: String by property()
+    fun fileSizeTextProperty() = getProperty(Job::fileSizeText)
 
     fun tooltipProperty() = stringBinding(titleProperty(), url.toProperty()) { "$title\n\n$url" }
 
