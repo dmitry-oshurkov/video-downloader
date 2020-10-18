@@ -57,15 +57,18 @@ tasks {
     compileTestKotlin { kotlinOptions.jvmTarget = compileKotlin.get().kotlinOptions.jvmTarget }
     wrapper { gradleVersion = "6.6.1" }
 
-    val copyYoutubeDl by registering(Copy::class) {
+    val copyDependencies by registering(Copy::class) {
         dependsOn(runtime)
-        from(if (isFamily(FAMILY_WINDOWS)) "setup/youtube-dl.exe" else "setup/youtube-dl")
+        if (isFamily(FAMILY_WINDOWS))
+            from("setup/youtube-dl.exe", "setup/msvcr100.dll", "setup/video-downloader.vbs")
+        else
+            from("setup/youtube-dl")
         into("${runtime.get().imageDir}/bin")
     }
 
     val release by registering {
         group = "distribution"
-        dependsOn(runtime, copyYoutubeDl)
+        dependsOn(runtime, copyDependencies)
 
         doFirst {
             with(file("${runtime.get().imageDir}/release")) {
@@ -95,7 +98,8 @@ tasks {
             description = "Загрузка видео из Youtube"
             location = StartMenu
             categories = "AudioVideo;AudioVideoEditing;"
-            executable = if (isFamily(FAMILY_WINDOWS)) "bin/${project.name}.bat" else "bin/${project.name}"
+            executable = if (isFamily(FAMILY_WINDOWS)) "${project.name}.vbs" else "bin/${project.name}"
+            workDir = if (isFamily(FAMILY_WINDOWS)) "bin" else null
         })
     }
 
