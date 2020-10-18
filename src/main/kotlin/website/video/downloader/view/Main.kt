@@ -41,8 +41,6 @@ class Main : View() {
         }
 
         vbox {
-            prefWidth = 800.0
-            prefHeight = 800.0
             padding = insets(10.0)
             addClass(main)
 

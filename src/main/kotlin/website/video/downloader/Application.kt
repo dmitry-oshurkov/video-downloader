@@ -25,10 +25,12 @@ class Application : App(Main::class, Styles::class) {
             minHeight = 160.0
 
             isMaximized = Prefs.isMaximized
-            x = Prefs.x
-            y = Prefs.y
             width = Prefs.width
             height = Prefs.height
+            if (!Prefs.x.isNaN())
+                x = Prefs.x
+            if (!Prefs.y.isNaN())
+                y = Prefs.y
 
             setOnCloseRequest {
                 Prefs.isMaximized = isMaximized

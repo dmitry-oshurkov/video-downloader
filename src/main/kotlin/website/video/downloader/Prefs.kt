@@ -1,5 +1,6 @@
 package website.video.downloader
 
+import java.lang.Double.*
 import java.util.prefs.Preferences.*
 
 object Prefs {
@@ -21,10 +22,10 @@ object Prefs {
         userPrefs.run {
 
             isMaximized = getBoolean("isMaximized", false)
-            x = getDouble("x", 0.0)
-            y = getDouble("y", 0.0)
+            x = getDouble("x", NaN)
+            y = getDouble("y", NaN)
             width = getDouble("width", 600.0)
-            height = getDouble("height", 800.0)
+            height = getDouble("height", 550.0)
             donateIsPushed = getBoolean("donateIsPushed", false)
         }
     }
