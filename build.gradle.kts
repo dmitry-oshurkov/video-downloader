@@ -80,8 +80,8 @@ tasks {
 
     setupBuilder {
         vendor = "Dmitry Oshurkov"
-        application = if (isFamily(FAMILY_WINDOWS)) "Video-downloader" else project.name
-        description = if (isFamily(FAMILY_WINDOWS)) "«Video-downloader»" else project.description
+        application = if (isFamily(FAMILY_WINDOWS)) "Video Downloader" else project.name
+        description = "Download online video to local storage for further playing"
         appIdentifier = project.name
         version = project.version.toString()
         icons = "setup/app.icns"
@@ -93,7 +93,7 @@ tasks {
         desktopStarter(closureOf<DesktopStarter> {
             displayName = "Видеозагрузка"
             description = "Загрузка видео из Youtube"
-            location = ApplicationMenu
+            location = StartMenu
             categories = "AudioVideo;AudioVideoEditing;"
             executable = if (isFamily(FAMILY_WINDOWS)) "bin/${project.name}.bat" else "bin/${project.name}"
         })
