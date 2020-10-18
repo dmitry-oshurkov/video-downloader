@@ -36,6 +36,8 @@ fun Job.delete() = run {
 
 fun loadJobs() {
 
+    jobsFile.parentFile.mkdirs()
+
     if (jobsFile.exists())
         jobs += jobsFile.readText()
             .parseJson<List<Job>>()
@@ -134,5 +136,9 @@ private val downloadProgress = """\[download\]\s+(.*)%\s+of\s+([\d.]*)(GiB|MiB|K
 private val downloaded = """Merging formats into "([\s\S]*?)"""".toRegex()
 private val alreadyDownloaded = """\[download\]\s+(.*)\s+has""".toRegex()
 
-private val jobsFile = File("$USER_HOME/.local/share/$APP_NAME/jobs.json")
+private val jobsFile = if (IS_WINDOWS)
+    File("$configDir/$APP_NAME/jobs.json")
+else
+    File("$USER_HOME/.local/share/$APP_NAME/jobs.json")
+
 private val outFile = File(appConfig.downloadDir, "%(title)s.%(ext)s").absolutePath

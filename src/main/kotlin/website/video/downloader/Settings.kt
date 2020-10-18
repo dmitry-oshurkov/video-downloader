@@ -43,4 +43,4 @@ private fun Map<String, Any>.renderConfig() =
 
 private val renderOptions = ConfigRenderOptions.concise().setJson(false).setFormatted(true).setComments(true)
 
-private val configFile = File("$USER_HOME/.config/$APP_NAME/application.conf")
+private val configFile = File("$configDir/$APP_NAME/application.conf")
