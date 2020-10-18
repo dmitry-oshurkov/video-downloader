@@ -9,6 +9,7 @@ import tornadofx.*
 import tornadofx.FX.Companion.messages
 import website.video.downloader.DownloadState.*
 import java.io.*
+import java.text.*
 import java.util.*
 import javax.imageio.*
 
@@ -71,8 +72,12 @@ class Job(
         file?.let { "${File(it).extension.toUpperCase()} · $format · $fps ${messages["jobs.units.fps"]}" }
     }
 
-    private var fileSizeText: String by property()
-    fun fileSizeTextProperty() = getProperty(Job::fileSizeText)
+    private var fileSizeTextInProgress: String by property()
+    fun fileSizeTextInProgressProperty() = getProperty(Job::fileSizeTextInProgress)
+
+    fun fileSizeTextProperty() = stringBinding(fileSizeProperty(), fileSizeTextInProgressProperty()) {
+        fileSize?.let { humanReadableByteCountSI(it) } ?: fileSizeTextInProgress
+    }
 
     fun tooltipProperty() = stringBinding(titleProperty(), url.toProperty()) {
         "$title\n\n$url"
@@ -80,6 +85,28 @@ class Job(
 
     override fun toString() = title
 }
+
+private fun humanReadableByteCountSI(bytesValue: Long) = run {
+
+    var bytes = bytesValue
+
+    when {
+
+        -1000 < bytes && bytes < 1000 -> "$bytes ${messages["jobs.byte.human"]}"
+
+        else -> {
+            val ci = StringCharacterIterator(messages["jobs.bytes.human"])
+
+            while (bytes <= -999950 || bytes >= 999950) {
+                bytes /= 1000
+                ci.next()
+            }
+
+            String.format("%.1f %c${messages["jobs.byte.human"]}", bytes / 1000.0, ci.current())
+        }
+    }
+}
+
 
 enum class DownloadState { NEW, IN_PROGRESS, COMPLETED, ERROR }
 

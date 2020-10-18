@@ -11,7 +11,6 @@ import website.video.downloader.DownloadState.*
 import java.io.*
 import java.net.*
 import java.nio.file.*
-import java.text.*
 import java.time.*
 import javax.imageio.*
 
@@ -43,7 +42,6 @@ fun loadJobs() {
             .onEach {
                 if (it.state == IN_PROGRESS)
                     it.state = NEW
-                it.setFileSizeText()
             }
 }
 
@@ -101,7 +99,7 @@ private fun Job.setInfo(videoInfo: YoutubeVideo, thumbnail: String, thumbnailIma
 
 private fun Job.setProgress(groups: MatchGroupCollection) = runLater {
     progressProperty().set(groups[1]?.value?.toDouble()?.div(100))
-    fileSizeTextProperty().set("${groups[2]?.value} ${convertUnits(groups[3]?.value)}")
+    fileSizeTextInProgressProperty().set("${groups[2]?.value} ${convertUnits(groups[3]?.value)}")
     speedProperty().set("${groups[4]?.value} ${convertUnits(groups[5]?.value)}".padStart(12))
     etaProperty().set(groups[6]?.value)
 }
@@ -113,37 +111,11 @@ private fun Job.setCompletedAndSave(videoInfo: YoutubeVideo, file: File) = runLa
     val format = videoInfo.formats?.single { it.format_id == videoInfo.format_id?.split("+")?.first() }
     formatProperty().set(format?.format_note)
     fpsProperty().set(format?.fps)
-    setFileSizeText()
 
     saveJobs()
 }
 
-private fun Job.setFileSizeText() {
-    fileSize?.let { fileSizeTextProperty().set(humanReadableByteCountSI(it)) }
-}
-
 private fun saveJobs() = jobsFile.writeText(jobs.toJson())
-
-private fun humanReadableByteCountSI(bytesValue: Long) = run {
-
-    var bytes = bytesValue
-
-    when {
-
-        -1000 < bytes && bytes < 1000 -> "$bytes ${messages["jobs.byte.human"]}"
-
-        else -> {
-            val ci = StringCharacterIterator(messages["jobs.bytes.human"])
-
-            while (bytes <= -999950 || bytes >= 999950) {
-                bytes /= 1000
-                ci.next()
-            }
-
-            String.format("%.1f %c${messages["jobs.byte.human"]}", bytes / 1000.0, ci.current())
-        }
-    }
-}
 
 private fun convertUnits(value: String?) = when (value) {
     "GiB" -> messages["jobs.units.GiB"]
