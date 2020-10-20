@@ -61,7 +61,7 @@ else
 private val fileManager = if (IS_WINDOWS)
     "explorer"
 else
-    "nemo"
+    "nemo" // todo add support for other managers
 
 private val appRoot = File(Application::class.java.protectionDomain.codeSource.location.toURI()).parentFile.parent
 

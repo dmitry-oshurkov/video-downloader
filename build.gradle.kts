@@ -87,7 +87,7 @@ tasks {
         description = "Download online video to local storage for further playing"
         appIdentifier = project.name
         version = project.version.toString()
-        icons = "setup/app.icns"
+        icons = "setup/video-downloader.icns"
 
         from(runtime.get().imageDir)
         mainClass = project.application.mainClassName
