@@ -64,12 +64,13 @@ else
     "nemo" // todo add support for other managers
 
 private val appRoot = File(Application::class.java.protectionDomain.codeSource.location.toURI()).parentFile.parent
+private val youtubeDlLinux = "$appRoot/runtime/bin/youtube-dl"
 
 private val youtubeDl = if (IS_WINDOWS)
-    listOf("$appRoot/bin/youtube-dl.exe")
+    listOf("${youtubeDlLinux}.exe")
 else {
-    val youtube = if (File("$appRoot/bin/youtube-dl").exists())
-        "$appRoot/bin/youtube-dl"
+    val youtube = if (File(youtubeDlLinux).exists())
+        youtubeDlLinux
     else
         "setup/youtube-dl"
 

@@ -3,7 +3,6 @@ import com.inet.gradle.setup.abstracts.DesktopStarter.Location.*
 import org.apache.tools.ant.taskdefs.condition.Os.*
 import org.gradle.crypto.checksum.*
 import org.gradle.crypto.checksum.Checksum.Algorithm.*
-import java.time.*
 
 plugins {
     kotlin("jvm") version "1.4.10"
@@ -50,6 +49,11 @@ javafx {
 runtime {
     options.set(listOf("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages"))
     modules.set(listOf("java.desktop", "java.sql", "jdk.unsupported", "jdk.httpserver", "jdk.crypto.ec"))
+
+    jpackage {
+        skipInstaller = true
+        resourceDir = file("setup")
+    }
 }
 
 tasks {
@@ -57,28 +61,21 @@ tasks {
     compileTestKotlin { kotlinOptions.jvmTarget = compileKotlin.get().kotlinOptions.jvmTarget }
     wrapper { gradleVersion = "6.6.1" }
 
+    val imageDir = "${jpackageImage.get().jpackageData.imageOutputDir}/${jpackageImage.get().jpackageData.imageName}"
+    val jarName = shadowJar.get().archiveFileName.get()
+
     val copyDependencies by registering(Copy::class) {
-        dependsOn(runtime)
+        dependsOn(jpackage)
         if (isFamily(FAMILY_WINDOWS))
-            from("setup/youtube-dl.exe", "setup/msvcr100.dll", "setup/video-downloader.vbs")
+            from("setup/youtube-dl.exe", "setup/msvcr100.dll")
         else
             from("setup/youtube-dl")
-        into("${runtime.get().imageDir}/bin")
+        into(if (isFamily(FAMILY_WINDOWS)) "$imageDir/runtime/bin" else "$imageDir/lib/runtime/bin")
     }
 
     val release by registering {
         group = "distribution"
-        dependsOn(runtime, copyDependencies)
-
-        doFirst {
-            with(file("${runtime.get().imageDir}/release")) {
-                appendText("APP_VERSION=\"$version\"\n")
-                appendText("APP_BUILT=\"${LocalDateTime.now()}\"\n")
-            }
-
-            val extForRemove = if (!isFamily(FAMILY_WINDOWS)) ".bat" else ""
-            file("${runtime.get().imageDir}/bin/${project.name}${extForRemove}").delete()
-        }
+        dependsOn(jpackage, copyDependencies)
     }
 
     setupBuilder {
@@ -89,28 +86,32 @@ tasks {
         version = project.version.toString()
         icons = "setup/video-downloader.icns"
 
-        from(runtime.get().imageDir)
+        from(imageDir)
         mainClass = project.application.mainClassName
-        mainJar = "lib/${project.name}-${project.version}-all.jar"
+        mainJar = if (isFamily(FAMILY_WINDOWS)) "app/$jarName" else "lib/app/$jarName"
 
         desktopStarter(closureOf<DesktopStarter> {
             displayName = "Видеозагрузка"
             description = "Загрузка видео из Youtube"
             location = StartMenu
             categories = "AudioVideo;AudioVideoEditing;"
-            executable = if (isFamily(FAMILY_WINDOWS)) "${project.name}.vbs" else "bin/${project.name}"
-            workDir = if (isFamily(FAMILY_WINDOWS)) "bin" else null
+            executable = if (isFamily(FAMILY_WINDOWS)) "${project.name}.exe" else "bin/${project.name}"
         })
     }
 
-    val chmodX = "chmod +x \$INSTALLATION_ROOT/bin"
+    val chmodX = "chmod +x \$INSTALLATION_ROOT"
 
     deb {
         dependsOn(release)
         homepage = "https://video-downloader.oshurkov.name"
         maintainerEmail = "video-downloader@oshurkov.name"
         depends = "python3"
-        postinst += listOf("$chmodX/${project.name}", "$chmodX/java", "$chmodX/keytool", "$chmodX/youtube-dl")
+        postinst += listOf(
+            "$chmodX/bin/${project.name}",
+            "$chmodX/lib/runtime/bin/java",
+            "$chmodX/lib/runtime/bin/keytool",
+            "$chmodX/lib/runtime/bin/youtube-dl"
+        )
     }
 
     msi { dependsOn(release) }
