@@ -64,20 +64,6 @@ tasks {
     val imageDir = "${jpackageImage.get().jpackageData.imageOutputDir}/${jpackageImage.get().jpackageData.imageName}"
     val jarName = shadowJar.get().archiveFileName.get()
 
-    val copyDependencies by registering(Copy::class) {
-        dependsOn(jpackage)
-        if (isFamily(FAMILY_WINDOWS))
-            from("setup/youtube-dl.exe", "setup/ffmpeg.exe", "setup/msvcr100.dll")
-        else
-            from("setup/youtube-dl")
-        into(if (isFamily(FAMILY_WINDOWS)) "$imageDir/runtime/bin" else "$imageDir/lib/runtime/bin")
-    }
-
-    val release by registering {
-        group = "distribution"
-        dependsOn(jpackage, copyDependencies)
-    }
-
     setupBuilder {
         vendor = "Dmitry Oshurkov"
         application = if (isFamily(FAMILY_WINDOWS)) "Video Downloader" else project.name
@@ -102,8 +88,12 @@ tasks {
     val chmodX = "chmod +x \$INSTALLATION_ROOT"
 
     deb {
-        dependsOn(release)
-        homepage = "https://video-downloader.oshurkov.name"
+        dependsOn(jpackage)
+        from("setup") {
+            include("youtube-dl")
+            into("lib/runtime/bin")
+        }
+        homepage = "https://video-downloader.website/"
         maintainerEmail = "video-downloader@oshurkov.name"
         depends = "python3, ffmpeg"
         postinst += listOf(
@@ -114,7 +104,13 @@ tasks {
         )
     }
 
-    msi { dependsOn(release) }
+    msi {
+        dependsOn(jpackage)
+        from("setup") {
+            include("youtube-dl.exe", "ffmpeg.exe", "msvcr100.dll")
+            into("runtime/bin")
+        }
+    }
 
     val createChecksums by registering(Checksum::class) {
         files = fileTree(setupBuilder.destinationDir)
