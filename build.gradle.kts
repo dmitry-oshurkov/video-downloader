@@ -77,8 +77,8 @@ tasks {
         mainJar = if (isFamily(FAMILY_WINDOWS)) "app/$jarName" else "lib/app/$jarName"
 
         desktopStarter(closureOf<DesktopStarter> {
-            displayName = "Видеозагрузка"
-            description = "Загрузка видео из Youtube"
+            displayName = "Video Downloader"
+            description = "Download online video to local storage for further playing"
             location = StartMenu
             categories = "AudioVideo;AudioVideoEditing;"
             executable = if (isFamily(FAMILY_WINDOWS)) "${project.name}.exe" else "bin/${project.name}"
