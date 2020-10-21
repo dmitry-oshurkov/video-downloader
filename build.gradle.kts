@@ -67,7 +67,7 @@ tasks {
     val copyDependencies by registering(Copy::class) {
         dependsOn(jpackage)
         if (isFamily(FAMILY_WINDOWS))
-            from("setup/youtube-dl.exe", "setup/msvcr100.dll")
+            from("setup/youtube-dl.exe", "setup/ffmpeg.exe", "setup/msvcr100.dll")
         else
             from("setup/youtube-dl")
         into(if (isFamily(FAMILY_WINDOWS)) "$imageDir/runtime/bin" else "$imageDir/lib/runtime/bin")
@@ -105,7 +105,7 @@ tasks {
         dependsOn(release)
         homepage = "https://video-downloader.oshurkov.name"
         maintainerEmail = "video-downloader@oshurkov.name"
-        depends = "python3"
+        depends = "python3, ffmpeg"
         postinst += listOf(
             "$chmodX/bin/${project.name}",
             "$chmodX/lib/runtime/bin/java",
