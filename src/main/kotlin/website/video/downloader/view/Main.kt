@@ -136,7 +136,9 @@ class Main : View() {
                                                 spacing = 5.0
                                                 visibleWhen(it.durationProperty().isNotNull)
 
-                                                glyph("\uf210")
+                                                glyph("\uf210") {
+                                                    prefHeight = 16.0
+                                                }
                                                 label(it.durationProperty())
                                             }
 
@@ -144,19 +146,22 @@ class Main : View() {
                                                 spacing = 5.0
                                                 visibleWhen(it.fileSizeTextProperty().isNotNull)
 
-                                                glyph("\uf318")
+                                                glyph("\uf318") {
+                                                    prefHeight = 16.0
+                                                }
                                                 label(it.fileSizeTextProperty())
                                             }
                                         }
 
                                         vbox {
-                                            spacing = 5.0
+                                            spacing = 10.0
 
                                             hbox {
                                                 spacing = 5.0
                                                 hiddenWhen(completed.or(it.progressProperty().isNull))
 
                                                 progressbar(it.progressProperty()) {
+                                                    prefHeight = 16.0
                                                     prefWidth = 150.0
                                                 }
 
@@ -170,6 +175,7 @@ class Main : View() {
                                                 visibleWhen(it.speedProperty().isNotNull.or(it.formatProperty().isNotNull))
 
                                                 glyph("\uf40b") {
+                                                    prefHeight = 16.0
                                                     removeWhen(completed)
                                                 }
 
