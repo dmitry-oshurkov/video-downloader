@@ -1,11 +1,8 @@
 package website.video.downloader
 
-import com.sun.net.httpserver.*
 import javafx.stage.*
 import tornadofx.*
 import website.video.downloader.view.*
-import java.io.*
-import java.net.*
 import java.util.*
 
 class Application : App(Main::class, Styles::class) {
@@ -13,8 +10,6 @@ class Application : App(Main::class, Styles::class) {
     init {
         FX.locale = Locale(appConfig.locale)
     }
-
-    private val httpServer = HttpServer.create(InetSocketAddress("127.0.0.1", appConfig.urlListenerPort), 0)
 
     override fun start(stage: Stage) {
 
@@ -49,21 +44,8 @@ class Application : App(Main::class, Styles::class) {
         super.start(stage)
     }
 
-    private fun startRest() = with(httpServer) {
-        createContext("/api/queue") { http ->
-
-            if (http.requestMethod == "POST") {
-                val url = http.requestBody.readAllBytes().decodeToString()
-                runLater { placeToQueue(url) }
-            }
-            http.sendResponseHeaders(200, 0)
-            PrintWriter(http.responseBody).use { }
-        }
-        start()
-    }
-
     override fun stop() {
-        httpServer.stop(0)
+        stopRest()
         super.stop()
     }
 }
