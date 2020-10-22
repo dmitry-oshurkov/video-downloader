@@ -1,8 +1,12 @@
 package website.video.downloader
 
+import javafx.scene.control.Alert.AlertType.*
+import javafx.scene.control.ButtonType.*
 import javafx.stage.*
 import tornadofx.*
+import tornadofx.FX.Companion.messages
 import website.video.downloader.view.*
+import java.net.*
 import java.util.*
 
 class Application : App(Main::class, Styles::class) {
@@ -26,6 +30,14 @@ class Application : App(Main::class, Styles::class) {
                 x = Prefs.x
             if (!Prefs.y.isNaN())
                 y = Prefs.y
+
+            setOnShown {
+                if (hasUpdates())
+                    alert(INFORMATION, messages["dialog.update.header"], null, YES, NO, owner = this, title = messages["dialog.update.title"]) {
+                        if (it == YES)
+                            runAsync { desktop.browse(URI("https://video-downloader.website/#block1")) }
+                    }
+            }
 
             setOnCloseRequest {
                 Prefs.isMaximized = isMaximized

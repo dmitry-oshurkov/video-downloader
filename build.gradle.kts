@@ -11,6 +11,7 @@ plugins {
     id("org.beryx.runtime") version "1.11.4"
     id("de.inetsoftware.setupbuilder") version "4.8.7"
     id("org.gradle.crypto.checksum") version "1.2.0"
+    id("de.fuerstenau.buildconfig") version "1.1.8"
 }
 
 group = "website.video.downloader"

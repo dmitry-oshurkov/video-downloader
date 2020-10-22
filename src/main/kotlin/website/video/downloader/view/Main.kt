@@ -17,7 +17,6 @@ import website.video.downloader.Styles.Companion.main
 import website.video.downloader.Styles.Companion.progressLabels
 import website.video.downloader.Styles.Companion.toolButton
 import website.video.downloader.Styles.Companion.videoButton
-import java.awt.*
 import java.io.*
 import java.net.*
 
@@ -230,7 +229,10 @@ class Main : View() {
         }
     }
 
-    private val desktop = Desktop.getDesktop()
+    override fun onCreate() {
+        super.onCreate()
+    }
+
     private fun Job.showVideo() = runAsync { desktop.open(File(file!!)) }
     private fun Job.browseVideoUrl() = runAsync { desktop.browse(URI(url)) }
 
