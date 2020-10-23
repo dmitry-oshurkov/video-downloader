@@ -35,7 +35,7 @@ class Application : App(Main::class, Styles::class) {
                 if (hasUpdates())
                     alert(INFORMATION, messages["dialog.update.header"], null, YES, NO, owner = this, title = messages["dialog.update.title"]) {
                         if (it == YES)
-                            runAsync { desktop.browse(URI("https://video-downloader.website/#block1")) }
+                            runAsync { desktop.browse(URI("https://video-downloader.website/#download")) }
                     }
             }
 
