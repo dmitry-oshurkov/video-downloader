@@ -64,7 +64,7 @@ class Main : View() {
 
                 button(donateBtnText) {
                     action {
-                        runAsync { desktop.browse(URI("https://video-downloader.website/")) }
+                        runAsync { desktop.browse(URI("https://video-downloader.website/#donate")) }
                         donateIsPushed.value = true
                         Prefs.donateIsPushed = true
                         Prefs.save()
