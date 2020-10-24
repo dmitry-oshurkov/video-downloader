@@ -9,6 +9,7 @@ import javafx.scene.layout.Priority.*
 import kotlinx.coroutines.*
 import tornadofx.*
 import website.video.downloader.*
+import website.video.downloader.BuildConfig.*
 import website.video.downloader.DownloadState.*
 import website.video.downloader.Job
 import website.video.downloader.Styles.Companion.backImage
@@ -26,6 +27,7 @@ class Main : View() {
     private val donateIsPushed = Prefs.donateIsPushed.toProperty()
     private val donateText = messages["main.btn.donate"]
     private val donateBtnText = stringBinding(donateIsPushed) { if (value) null else donateText }
+    private val jobsStatus = stringBinding(jobs) { "${messages["main.status.video.count"]}: ${jobs.size}  |  ${messages["main.status.video.total"]}: $totalTime" }
 
     init {
         title = messages["main.title"]
@@ -40,7 +42,7 @@ class Main : View() {
         }
 
         vbox {
-            padding = insets(10.0)
+            padding = insets(10.0, 10.0, 3.0, 10.0)
             addClass(main)
 
             hbox {
@@ -124,6 +126,7 @@ class Main : View() {
                                 anchorpane {
 
                                     val completed = it.stateProperty().isEqualTo(COMPLETED)
+                                    it.durationProperty().onChange { jobsStatus.invalidate() }
 
                                     hbox {
                                         spacing = 15.0
@@ -225,6 +228,12 @@ class Main : View() {
                         ?.takeIf { it.state == COMPLETED }
                         ?.also { it.showVideo() }
                 }
+            }
+
+            hbox {
+                label(jobsStatus)
+                pane { hgrow = ALWAYS }
+                label(VERSION)
             }
         }
     }
