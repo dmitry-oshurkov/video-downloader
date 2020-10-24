@@ -19,6 +19,7 @@ version = "20.5"
 description = "Видеозагрузка"
 
 val tornadofxVersion: String by rootProject
+val kotestVersion: String by rootProject
 
 repositories {
     mavenCentral()
@@ -39,7 +40,10 @@ dependencies {
     implementation("io.github.config4k:config4k:0.4.2")
     implementation("org.slf4j:slf4j-jdk14:1.7.30")
 
-    testImplementation(kotlin("test-junit"))
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    testImplementation("io.kotest:kotest-property:$kotestVersion")
+    testImplementation("io.mockk:mockk:1.10.2")
 }
 
 javafx {
@@ -61,6 +65,7 @@ tasks {
     compileKotlin { kotlinOptions.jvmTarget = "1.8" }
     compileTestKotlin { kotlinOptions.jvmTarget = compileKotlin.get().kotlinOptions.jvmTarget }
     wrapper { gradleVersion = "6.6.1" }
+    withType<Test> { useJUnitPlatform() }
 
     val imageDir = "${jpackageImage.get().jpackageData.imageOutputDir}/${jpackageImage.get().jpackageData.imageName}"
     val jarName = shadowJar.get().archiveFileName.get()

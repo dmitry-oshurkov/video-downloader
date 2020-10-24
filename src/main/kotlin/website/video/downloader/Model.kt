@@ -27,7 +27,7 @@ class Job(
     var title: String by property(title)
     fun titleProperty() = getProperty(Job::title)
 
-    var duration: String by property(duration)
+    var duration: String? by property(duration)
     fun durationProperty() = getProperty(Job::duration)
 
     var file: String? by property(file)

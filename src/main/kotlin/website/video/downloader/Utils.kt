@@ -18,6 +18,7 @@ import java.net.http.*
 import java.net.http.HttpResponse.*
 import java.util.*
 import javax.imageio.*
+import kotlin.math.*
 
 fun execYoutubeDl(vararg args: String, progress: (String) -> Unit) = ProcessExecutor()
     .command(youtubeDl + args)
@@ -70,6 +71,20 @@ fun hasUpdates() = run {
     published > VERSION.toDouble()
 }
 
+val totalTime
+    get() = jobs
+        .filter { it.duration != null }
+        .map { it.duration!!.split(":".toRegex(), 3).map(String::toInt) }
+        .map { (h, m, s) -> h * 3600 + m * 60 + s }
+        .fold(0) { acc, value -> acc + value }
+        .let {
+            val x = it % 3600
+            val h = floor(it / 3600.0).toInt().toString().padStart(2, '0')
+            val m = floor(x / 60.0).toInt().toString().padStart(2, '0')
+            val s = (x % 60).toString().padStart(2, '0')
+
+            "$h:$m:$s"
+        }
 
 const val APP_NAME = "video-downloader"
 
