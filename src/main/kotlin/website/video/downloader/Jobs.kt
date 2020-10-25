@@ -67,8 +67,7 @@ private fun Job.runDownload() = run {
     runLater { stateProperty().set(IN_PROGRESS) }
     execYoutubeDl("--dump-json", url) {
 
-        if (it.startsWith("ERROR"))
-            runLater { titleProperty().set(it) }
+        checkError(it)
 
         val videoInfo = it.parseJson<YoutubeVideo>()
 
@@ -79,8 +78,7 @@ private fun Job.runDownload() = run {
 
         execYoutubeDl("--no-warnings", "-f", "bestvideo[height<=1080]+bestaudio/best[height<=1080]", "-o", outFile, url) { s ->
 
-            if (s.startsWith("ERROR"))
-                runLater { titleProperty().set(s) }
+            checkError(s)
 
             val groups = downloadProgress.find(s)?.groups
             val pathname = downloaded.find(s)?.groupValues?.last() ?: alreadyDownloaded.find(s)?.groupValues?.last()
@@ -117,6 +115,14 @@ private fun Job.execYoutubeDl(vararg args: String, progress: (String) -> Unit) {
             })
             .execute()
     }
+}
+
+private fun Job.checkError(s: String) = runLater {
+    if (s.startsWith("ERROR")) {
+        needReloadProperty().set(true)
+        titleProperty().set(s)
+    } else
+        needReloadProperty().set(false)
 }
 
 private fun Job.setInfo(videoInfo: YoutubeVideo, thumbnail: String, thumbnailImage: Image) = runLater {
