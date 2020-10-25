@@ -16,6 +16,7 @@ import java.net.*
 import java.nio.file.*
 import java.time.*
 import javax.imageio.*
+import kotlin.text.Regex.Companion.escape
 
 fun placeToQueue(url: String?) = url
     ?.takeIf { it !in jobs.map { job -> job.url } }
@@ -33,7 +34,7 @@ fun Job.delete() = run {
     if (file != null)
         File(file!!).delete()
 
-    Files.find(Path.of(appConfig.downloadDir), 1, { path, _ -> path.toFile().name.matches("$title.*\\.part".toRegex()) })
+    Files.find(Path.of(appConfig.downloadDir), 1, { path, _ -> path.toFile().name.matches("${escape(title)}.*\\.part".toRegex()) })
         .forEach { path -> path.toFile().delete() }
 
     jobs.remove(this)
