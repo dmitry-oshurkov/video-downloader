@@ -63,7 +63,7 @@ fun hasUpdates() = run {
 val totalTime
     get() = jobs
         .filter { it.duration != null }
-        .map { it.duration!!.split(":".toRegex(), 3).map(String::toInt) }
+        .map { it.duration!!.padEnd(3, ':').padEnd(4, '0').padEnd(5, '0').padEnd(6, ':').padEnd(7, '0').padEnd(8, '0').split(":").map(String::toInt) }
         .map { (h, m, s) -> h * 3600 + m * 60 + s }
         .fold(0) { acc, value -> acc + value }
         .let {
