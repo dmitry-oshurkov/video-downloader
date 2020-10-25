@@ -13,10 +13,11 @@ import website.video.downloader.BuildConfig.*
 import website.video.downloader.DownloadState.*
 import website.video.downloader.Job
 import website.video.downloader.Styles.Companion.backImage
+import website.video.downloader.Styles.Companion.donateButton
+import website.video.downloader.Styles.Companion.downloadButton
 import website.video.downloader.Styles.Companion.jobTitle
 import website.video.downloader.Styles.Companion.main
 import website.video.downloader.Styles.Companion.progressLabels
-import website.video.downloader.Styles.Companion.toolButton
 import website.video.downloader.Styles.Companion.videoButton
 import java.io.*
 import java.net.*
@@ -58,7 +59,7 @@ class Main : View() {
                     graphic = imageview("images/youtube.png")
                     prefHeight = 40.0
                     isFocusTraversable = false
-                    addClass(toolButton)
+                    addClass(downloadButton)
                     enableWhen(canDownload)
                 }
 
@@ -75,7 +76,7 @@ class Main : View() {
                     graphic = imageview("images/donate.png")
                     prefHeight = 40.0
                     isFocusTraversable = false
-                    addClass(toolButton)
+                    addClass(donateButton)
                 }
             }
 

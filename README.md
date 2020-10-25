@@ -12,7 +12,7 @@ Downloads online video to local storage for further playing.
 
 ## Icons resources
 https://www.iconfinder.com/icons/1055007/play_movie_video_icon  
-https://www.iconfinder.com/icons/48672/donate_icon  
+https://www.iconfinder.com/icons/384871/gift_presents_holiday_xmas_icon 
 https://www.iconfinder.com/icons/4362951/youtube_logo_social_media_icon  
 https://iconarchive.com/show/developpers-icons-by-sekkyumu.1.html  
 https://www.webhostinghub.com/glyphs/

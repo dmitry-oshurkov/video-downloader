@@ -15,7 +15,8 @@ class Styles : Stylesheet() {
         val backImage by cssclass()
         val jobTitle by cssclass()
         val progressLabels by cssclass()
-        val toolButton by cssclass()
+        val downloadButton by cssclass()
+        val donateButton by cssclass()
         val videoButton by cssclass()
         val glyphLabel by cssclass()
     }
@@ -50,12 +51,21 @@ class Styles : Stylesheet() {
             fontFamily = "DejaVu Sans Mono"
         }
 
-        toolButton {
+        val toolButton = mixin {
             fontSize = 14.px
             fontWeight = BOLD
 
             and(hover) { effect = hoverButtonShadow() }
             and(pressed) { effect = pressedButtonShadow() }
+        }
+
+        downloadButton {
+            +toolButton
+        }
+
+        donateButton {
+            +toolButton
+            fontWeight = NORMAL
         }
 
         videoButton {
