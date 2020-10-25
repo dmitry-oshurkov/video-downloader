@@ -202,18 +202,18 @@ class Main : View() {
                                             bottomAnchor = 0
                                         }
 
-                                        button(messages["main.btn.play"], "images/play-icon.png") {
+                                        button(messages["main.btn.play"], "images/play.png") {
                                             enableWhen(completed)
                                             action { item.showVideo() }
                                             addClass(videoButton)
                                         }
 
-                                        button(messages["main.btn.browse"], "images/web-browser-icon.png") {
+                                        button(messages["main.btn.browse"], "images/browse.png") {
                                             action { item.browseVideoUrl() }
                                             addClass(videoButton)
                                         }
 
-                                        button(messages["main.btn.delete"], "images/remove-icon.png") {
+                                        button(messages["main.btn.delete"], "images/delete.png") {
                                             action { item.delete() }
                                             addClass(videoButton)
                                         }
