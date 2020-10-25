@@ -120,10 +120,8 @@ private fun Job.execYoutubeDl(vararg args: String, progress: (String) -> Unit) {
 
 private fun Job.checkError(s: String) = runLater {
     if (s.startsWith("ERROR")) {
-        needReloadProperty().set(true)
         titleProperty().set(s)
-    } else
-        needReloadProperty().set(false)
+    }
 }
 
 private fun Job.setInfo(videoInfo: YoutubeVideo, thumbnail: String, thumbnailImage: Image) = runLater {
