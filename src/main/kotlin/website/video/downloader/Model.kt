@@ -2,6 +2,7 @@
 
 package website.video.downloader
 
+import com.fasterxml.jackson.annotation.*
 import javafx.beans.property.*
 import javafx.embed.swing.*
 import javafx.scene.image.*
@@ -82,6 +83,12 @@ class Job(
     fun tooltipProperty() = stringBinding(titleProperty(), url.toProperty()) {
         "$title\n\n$url"
     }
+
+    @JsonIgnore
+    var cancelDownload = { } // need to be public for ignore
+
+    @JsonIgnore
+    var deleted = false // need to be public for ignore
 
     override fun toString() = title
 }

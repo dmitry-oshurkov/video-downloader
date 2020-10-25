@@ -6,8 +6,6 @@ import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.image.*
 import javafx.scene.image.Image
-import org.zeroturnaround.exec.*
-import org.zeroturnaround.exec.stream.*
 import tornadofx.*
 import website.video.downloader.BuildConfig.*
 import website.video.downloader.Styles.Companion.glyphLabel
@@ -19,15 +17,6 @@ import java.net.http.HttpResponse.*
 import java.util.*
 import javax.imageio.*
 import kotlin.math.*
-
-fun execYoutubeDl(vararg args: String, progress: (String) -> Unit) = ProcessExecutor()
-    .command(youtubeDl + args)
-    .redirectOutput(object : LogOutputStream() {
-        override fun processLine(line: String) {
-            progress(line)
-        }
-    })
-    .execute()!!
 
 fun openOutDirInFiles() = Runtime.getRuntime().exec("$fileManager ${appConfig.downloadDir}")!!
 
@@ -102,17 +91,3 @@ private val fileManager = if (IS_WINDOWS)
     "explorer"
 else
     "nemo" // todo add support for other managers
-
-private val appRoot = File(Application::class.java.protectionDomain.codeSource.location.toURI()).parentFile.parent
-private val youtubeDlLinux = "$appRoot/runtime/bin/youtube-dl"
-
-private val youtubeDl = if (IS_WINDOWS)
-    listOf("${youtubeDlLinux}.exe")
-else {
-    val youtube = if (File(youtubeDlLinux).exists())
-        youtubeDlLinux
-    else
-        "setup/youtube-dl"
-
-    listOf("python3", youtube)
-}

@@ -5,6 +5,9 @@ package website.video.downloader
 import javafx.embed.swing.*
 import javafx.scene.image.*
 import kotlinx.coroutines.*
+import org.zeroturnaround.exec.*
+import org.zeroturnaround.exec.listener.*
+import org.zeroturnaround.exec.stream.*
 import tornadofx.*
 import tornadofx.FX.Companion.messages
 import website.video.downloader.DownloadState.*
@@ -23,6 +26,9 @@ fun placeToQueue(url: String?) = url
     }
 
 fun Job.delete() = run {
+
+    deleted = true
+    cancelDownload()
 
     if (file != null)
         File(file!!).delete()
@@ -86,7 +92,30 @@ private fun Job.runDownload() = run {
                 runLater { fileProperty().set(pathname) }
         }
 
-        setCompletedAndSave(videoInfo, File(file!!))
+        if (file != null)
+            setCompletedAndSave(videoInfo, File(file!!))
+    }
+}
+
+private fun Job.execYoutubeDl(vararg args: String, progress: (String) -> Unit) {
+
+    if (!deleted) {
+        ProcessExecutor()
+            .command(youtubeDl + args)
+            .destroyOnExit()
+            .addDestroyer(object : ProcessDestroyer {
+                override fun add(process: Process): Boolean {
+                    cancelDownload = { runCatching { process.destroy() } }
+                    return true
+                }
+
+                override fun remove(process: Process) = true
+                override fun size() = 1
+            })
+            .redirectOutput(object : LogOutputStream() {
+                override fun processLine(line: String) = progress(line)
+            })
+            .execute()
     }
 }
 
@@ -142,3 +171,17 @@ else
     File("$USER_HOME/.local/share/$APP_NAME/jobs.json")
 
 private val outFile = File(appConfig.downloadDir, "%(title)s.%(ext)s").absolutePath
+
+private val appRoot = File(Application::class.java.protectionDomain.codeSource.location.toURI()).parentFile.parent
+private val youtubeDlLinux = "$appRoot/runtime/bin/youtube-dl"
+
+private val youtubeDl = if (IS_WINDOWS)
+    listOf("${youtubeDlLinux}.exe")
+else {
+    val youtube = if (File(youtubeDlLinux).exists())
+        youtubeDlLinux
+    else
+        "setup/youtube-dl"
+
+    listOf("python3", youtube)
+}
