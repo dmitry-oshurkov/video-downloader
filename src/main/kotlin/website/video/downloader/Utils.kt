@@ -4,7 +4,6 @@ import javafx.embed.swing.*
 import javafx.event.*
 import javafx.scene.control.Button
 import javafx.scene.control.Label
-import javafx.scene.image.*
 import javafx.scene.image.Image
 import tornadofx.*
 import website.video.downloader.BuildConfig.*
@@ -25,11 +24,17 @@ fun imageToBase64(image: Image) = ByteArrayOutputStream().use {
     Base64.getEncoder().encodeToString(it.toByteArray())
 }!!
 
-fun EventTarget.button(tooltip: String, image: String, op: Button.() -> Unit = {}) {
+fun EventTarget.btn(op: Button.() -> Unit = {}) {
     button {
-        tooltip { text = tooltip }
         isFocusTraversable = false
-        graphic = ImageView(image)
+        op(this)
+    }
+}
+
+fun EventTarget.btn(tooltip: String, image: String, op: Button.() -> Unit = {}) {
+    btn {
+        tooltip { text = tooltip }
+        graphic = imageview(image)
         op(this)
     }
 }

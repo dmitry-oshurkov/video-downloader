@@ -51,12 +51,11 @@ class Main : View() {
                 padding = insets(5.0, 0.0, 0.0, 5.0)
                 onDoubleClick { openOutDirInFiles() }
 
-                button(messages["main.btn.paste-link"]) {
+                button(messages["main.btn.paste-link"], imageview("images/youtube.png")) {
                     action {
                         val url = clipboard.getContent(PLAIN_TEXT) as? String
                         placeToQueue(url)
                     }
-                    graphic = imageview("images/youtube.png")
                     prefHeight = 40.0
                     isFocusTraversable = false
                     addClass(downloadButton)
@@ -65,7 +64,7 @@ class Main : View() {
 
                 region { hgrow = ALWAYS }
 
-                button(donateBtnText) {
+                button(donateBtnText, imageview("images/donate.png")) {
                     action {
                         runAsync { desktop.browse(URI("https://video-downloader.website/#donate")) }
                         donateIsPushed.value = true
@@ -73,7 +72,6 @@ class Main : View() {
                         Prefs.save()
                     }
                     tooltipProperty().bind(Bindings.`when`(donateIsPushed).then(Tooltip(donateText)).otherwise(null as Tooltip?))
-                    graphic = imageview("images/donate.png")
                     prefHeight = 40.0
                     isFocusTraversable = false
                     addClass(donateButton)
@@ -208,12 +206,12 @@ class Main : View() {
                                             addClass(videoButton)
                                         }
 
-                                        button(messages["main.btn.browse"], "images/browse.png") {
+                                        btn(messages["main.btn.browse"], "images/browse.png") {
                                             action { item.browseVideoUrl() }
                                             addClass(videoButton)
                                         }
 
-                                        button(messages["main.btn.delete"], "images/delete.png") {
+                                        btn(messages["main.btn.delete"], "images/delete.png") {
                                             action { item.delete() }
                                             addClass(videoButton)
                                         }
@@ -237,10 +235,6 @@ class Main : View() {
                 label(VERSION)
             }
         }
-    }
-
-    override fun onCreate() {
-        super.onCreate()
     }
 
     private fun Job.showVideo() = runAsync { desktop.open(File(file!!)) }

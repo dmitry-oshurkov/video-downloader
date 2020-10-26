@@ -26,21 +26,6 @@ fun placeToQueue(url: String?) = url
         saveJobs()
     }
 
-fun Job.delete() = run {
-
-    deleted = true
-    cancelDownload()
-
-    if (file != null)
-        File(file!!).delete()
-
-    Files.find(Path.of(appConfig.downloadDir), 1, { path, _ -> path.toFile().name.matches("${escape(title)}.*\\.part".toRegex()) })
-        .forEach { path -> path.toFile().delete() }
-
-    jobs.remove(this)
-    saveJobs()
-}
-
 fun loadJobs() {
 
     jobsFile.parentFile.mkdirs()
@@ -95,6 +80,22 @@ private fun Job.runDownload() = run {
             setCompletedAndSave(videoInfo, File(file!!))
     }
 }
+
+fun Job.delete() = run {
+
+    deleted = true
+    cancelDownload()
+
+    if (file != null)
+        File(file!!).delete()
+
+    Files.find(Path.of(appConfig.downloadDir), 1, { path, _ -> path.toFile().name.matches("${escape(title)}.*\\.part".toRegex()) })
+        .forEach { path -> path.toFile().delete() }
+
+    jobs.remove(this)
+    saveJobs()
+}
+
 
 private fun Job.execYoutubeDl(vararg args: String, progress: (String) -> Unit) {
 
@@ -163,7 +164,9 @@ private fun convertUnits(value: String?) = when (value) {
     else -> ""
 }
 
-
+/**
+ * [jobs file](file:///home/dmitry/.local/share/video-downloader/jobs.json)
+ */
 val jobs = mutableListOf<Job>().asObservable()
 
 private val downloadProgress = """\[download\]\s+(.*)%\s+of\s+([\d.]*)(GiB|MiB|KiB).+at\s+([\d.]*)(GiB\/s|MiB\/s|KiB\/s).+ETA\s+([\d:]*)""".toRegex()
