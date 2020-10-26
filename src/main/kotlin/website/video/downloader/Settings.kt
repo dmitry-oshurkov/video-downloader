@@ -4,6 +4,9 @@ import com.typesafe.config.*
 import io.github.config4k.*
 import java.io.*
 
+/**
+ * [application conf file](file:///home/dmitry/.config/video-downloader/application.conf)
+ */
 data class AppConfig(
     val locale: String,
     val downloadDir: String,

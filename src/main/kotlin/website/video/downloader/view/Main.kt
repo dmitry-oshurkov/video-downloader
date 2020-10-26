@@ -48,6 +48,7 @@ class Main : View() {
 
             hbox {
                 prefHeight = 60.0
+                minHeight = 60.0
                 padding = insets(5.0, 0.0, 0.0, 5.0)
                 onDoubleClick { openOutDirInFiles() }
 
