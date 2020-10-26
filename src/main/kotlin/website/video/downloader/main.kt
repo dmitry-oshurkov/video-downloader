@@ -23,7 +23,7 @@ fun main() {
                 .let { File("$it/.$APP_NAME") }
 
         writeConfig(AppConfig(
-            locale = Locale.getDefault().toLanguageTag(),
+            locale = Locale.getDefault().toString(),
             downloadDir = downloadDir.absolutePath,
             urlListenerPort = 9533
         ))

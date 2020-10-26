@@ -18,7 +18,7 @@ fun loadConfig() = configFile
 fun writeConfig(appConfig: AppConfig) {
 
     val cfg = mapOf(
-        "# ru-RU, en_US locales is supported" to "",
+        "# ru_RU, en_US locales is supported" to "",
         "locale" to appConfig.locale,
         "# downloaded videos local storage" to "",
         "downloadDir" to appConfig.downloadDir,
