@@ -47,8 +47,7 @@ fun runJobMonitor() = GlobalScope.launch {
     }
 }
 
-
-private fun Job.runDownload() = run {
+fun Job.runDownload() = run {
 
     runLater { stateProperty().set(IN_PROGRESS) }
     execYoutubeDl("--dump-json", url) {
@@ -121,8 +120,10 @@ private fun Job.execYoutubeDl(vararg args: String, progress: (String) -> Unit) {
 
 private fun Job.checkError(s: String) = runLater {
     if (s.startsWith("ERROR")) {
+        needReload.set(true)
         titleProperty().set(s)
-    }
+    } else
+        needReload.set(false)
 }
 
 private fun Job.setInfo(videoInfo: YoutubeVideo, thumbnail: String, thumbnailImage: Image) = runLater {

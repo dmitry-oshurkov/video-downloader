@@ -85,6 +85,9 @@ class Job(
     }
 
     @JsonIgnore
+    val needReload = booleanProperty(false)
+
+    @JsonIgnore
     var cancelDownload = { } // need to be public for ignore
 
     @JsonIgnore

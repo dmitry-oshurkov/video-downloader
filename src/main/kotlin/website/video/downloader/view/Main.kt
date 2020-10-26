@@ -200,9 +200,16 @@ class Main : View() {
                                             bottomAnchor = 0
                                         }
 
-                                        button(messages["main.btn.play"], "images/play.png") {
-                                            enableWhen(completed)
-                                            action { item.showVideo() }
+                                        btn {
+                                            action {
+                                                if (it.needReload.value)
+                                                    item.reload()
+                                                else
+                                                    item.showVideo()
+                                            }
+                                            enableWhen(completed.or(it.needReload))
+                                            graphic = imageview(Bindings.`when`(it.needReload).then("images/reload.png").otherwise("images/play.png"))
+                                            tooltipProperty().bind(Bindings.`when`(it.needReload).then(Tooltip(messages["main.btn.reload"])).otherwise(Tooltip(messages["main.btn.play"])))
                                             addClass(videoButton)
                                         }
 
@@ -237,6 +244,7 @@ class Main : View() {
         }
     }
 
+    private fun Job.reload() = runAsync { runDownload() }
     private fun Job.showVideo() = runAsync { desktop.open(File(file!!)) }
     private fun Job.browseVideoUrl() = runAsync { desktop.browse(URI(url)) }
 
