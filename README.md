@@ -1,5 +1,7 @@
 # Video downloader
-Downloads online video to local storage for further playing.
+Downloads online video to local storage for further playing.  
+
+![Screenshot of Video downloader](https://video-downloader.website/video-downloader_en.png)
 
 ## Build Requirements
 | Platform  | Requirement                                                          |
@@ -10,7 +12,7 @@ Downloads online video to local storage for further playing.
 | Linux     | dpkg for creating Debian packages: `apt-get install dpkg`         |
 | Linux     | rpm for creating RPM packages: `apt-get install rpm`              |
 
-## Icons resources
+## Icon resources
 https://www.iconfinder.com/icons/1055007/play_movie_video_icon  
 https://www.iconfinder.com/icons/384871/gift_presents_holiday_xmas_icon 
 https://www.iconfinder.com/icons/4362951/youtube_logo_social_media_icon  
