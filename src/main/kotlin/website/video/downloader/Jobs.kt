@@ -15,6 +15,7 @@ import java.io.*
 import java.net.*
 import java.nio.file.*
 import java.time.*
+import java.time.format.*
 import javax.imageio.*
 import kotlin.text.Regex.Companion.escape
 
@@ -130,7 +131,7 @@ private fun Job.setInfo(videoInfo: YoutubeVideo, thumbnail: String, thumbnailIma
     titleProperty().set(videoInfo.title)
     thumbnailProperty().set(thumbnail)
     thumbnailImageProperty().set(thumbnailImage)
-    durationProperty().set(LocalTime.ofSecondOfDay(videoInfo.duration.toLong()).toString())
+    durationProperty().set(LocalTime.ofSecondOfDay(videoInfo.duration.toLong()).format(DateTimeFormatter.ofPattern("HH:mm:ss")))
 
     saveJobs()
 }
