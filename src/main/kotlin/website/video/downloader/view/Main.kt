@@ -65,6 +65,14 @@ class Main : View() {
 
                 region { hgrow = ALWAYS }
 
+                checkbox("max quality", Prefs.maxQuality.toProperty()) {
+                    action {
+                        Prefs.maxQuality = isSelected
+                        Prefs.save()
+                    }
+                    prefHeight = 40.0
+                }
+
                 button(donateBtnText, imageview("images/donate.png")) {
                     action {
                         runAsync { desktop.browse(URI("https://video-downloader.website/#donate")) }

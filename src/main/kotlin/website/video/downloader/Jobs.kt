@@ -62,7 +62,12 @@ fun Job.runDownload() = run {
 
         setInfo(videoInfo, thumbnail, thumbnailImage)
 
-        execYoutubeDl("--no-warnings", "-f", "bestvideo[height<=1080]+bestaudio/best[height<=1080]", "-o", outFile, url) { s ->
+        val height = if (Prefs.maxQuality)
+            "2160"
+        else
+            "1080"
+
+        execYoutubeDl("--no-warnings", "-f", "bestvideo[height<=$height]+bestaudio/best[height<=$height]", "-o", outFile, url) { s ->
 
             checkError(s)
 
