@@ -94,8 +94,10 @@ fun Job.delete() = run {
     if (file != null)
         File(file!!).delete()
 
-    Files.find(Path.of(appConfig.downloadDir), 1, { path, _ -> path.toFile().name.matches("${escape(title)}.*\\.part".toRegex()) })
-        .forEach { path -> path.toFile().delete() }
+    val regex = "${escape(title.replace("?", ""))}.*\\.part".toRegex()
+
+    Files.find(Path.of(appConfig.downloadDir), 1, { path, _ -> path.toFile().name.matches(regex) })
+        .forEach { it.toFile().delete() }
 
     jobs.remove(this)
     saveJobs()
