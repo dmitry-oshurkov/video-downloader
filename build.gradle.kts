@@ -5,8 +5,8 @@ import org.gradle.crypto.checksum.*
 import org.gradle.crypto.checksum.Checksum.Algorithm.*
 
 plugins {
-    kotlin("jvm") version "1.4.10"
-    id("org.openjfx.javafxplugin") version "0.0.9"
+    kotlin("jvm") version "1.4.32"
+    id("org.openjfx.javafxplugin") version "0.0.10"
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id("org.beryx.runtime") version "1.11.4"
     id("de.inetsoftware.setupbuilder") version "4.8.7"
@@ -15,7 +15,7 @@ plugins {
 }
 
 group = "website.video.downloader"
-version = "21.1"
+version = "21.2"
 description = "Видеозагрузка"
 
 val tornadofxVersion: String by rootProject
