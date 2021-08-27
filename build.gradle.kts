@@ -118,6 +118,11 @@ tasks {
         }
     }
 
+    val aur by registering {
+        group = "distribution"
+        dependsOn(jpackage)
+    }
+
     val createChecksums by registering(Checksum::class) {
         files = fileTree(setupBuilder.destinationDir)
         outputDir = setupBuilder.destinationDir
@@ -127,7 +132,7 @@ tasks {
     @Suppress("UNUSED_VARIABLE")
     val distribution by registering {
         group = "distribution"
-        dependsOn(if (isFamily(FAMILY_WINDOWS)) msi else deb)
+        dependsOn(if (isFamily(FAMILY_WINDOWS)) msi else aur)
         finalizedBy(createChecksums)
     }
 }
