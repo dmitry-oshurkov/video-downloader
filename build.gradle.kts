@@ -1,11 +1,12 @@
 import com.inet.gradle.setup.abstracts.*
 import com.inet.gradle.setup.abstracts.DesktopStarter.Location.*
 import org.apache.tools.ant.taskdefs.condition.Os.*
+import org.gradle.api.JavaVersion.*
 import org.gradle.crypto.checksum.*
 import org.gradle.crypto.checksum.Checksum.Algorithm.*
 
 plugins {
-    kotlin("jvm") version "1.4.32"
+    kotlin("jvm") version "1.5.30"
     id("org.openjfx.javafxplugin") version "0.0.10"
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id("org.beryx.runtime") version "1.11.4"
@@ -15,7 +16,7 @@ plugins {
 }
 
 group = "website.video.downloader"
-version = "21.2"
+version = "21.3"
 description = "Видеозагрузка"
 
 val tornadofxVersion: String by rootProject
@@ -32,22 +33,22 @@ application {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1-native-mt")
     implementation("no.tornado:tornadofx:$tornadofxVersion")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.3")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.4")
     implementation("org.zeroturnaround:zt-exec:1.12")
     implementation("org.sejda.imageio:webp-imageio:0.1.6")
     implementation("io.github.config4k:config4k:0.4.2")
-    implementation("org.slf4j:slf4j-jdk14:1.7.30")
+    implementation("org.slf4j:slf4j-jdk14:1.7.32")
 
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest:kotest-property:$kotestVersion")
-    testImplementation("io.mockk:mockk:1.10.2")
+    testImplementation("io.mockk:mockk:1.12.0")
 }
 
 javafx {
-    version = "14"
+    version = VERSION_14.toString()
     modules = listOf("javafx.controls", "javafx.swing")
 }
 
@@ -62,10 +63,10 @@ runtime {
 }
 
 tasks {
-    compileKotlin { kotlinOptions.jvmTarget = "1.8" }
+    compileKotlin { kotlinOptions.jvmTarget = VERSION_14.toString() }
     compileTestKotlin { kotlinOptions.jvmTarget = compileKotlin.get().kotlinOptions.jvmTarget }
     wrapper { gradleVersion = "6.6.1" }
-    withType<Test> { useJUnitPlatform() }
+    test { useJUnitPlatform() }
 
     val imageDir = "${jpackageImage.get().jpackageData.imageOutputDir}/${jpackageImage.get().jpackageData.imageName}"
     val jarName = shadowJar.get().archiveFileName.get()

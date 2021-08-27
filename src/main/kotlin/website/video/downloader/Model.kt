@@ -70,7 +70,7 @@ class Job(
     fun etaProperty() = getProperty(Job::eta)
 
     fun formatTextProperty() = stringBinding(fileProperty(), formatProperty(), fpsProperty()) {
-        file?.let { "${File(it).extension.toUpperCase()} · $format · $fps ${messages["jobs.units.fps"]}" }
+        file?.let { "${File(it).extension.uppercase()} · $format · $fps ${messages["jobs.units.fps"]}" }
     }
 
     private var fileSizeTextInProgress: String by property()
