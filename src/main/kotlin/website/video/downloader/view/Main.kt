@@ -13,7 +13,6 @@ import website.video.downloader.BuildConfig.*
 import website.video.downloader.DownloadState.*
 import website.video.downloader.Job
 import website.video.downloader.Styles.Companion.backImage
-import website.video.downloader.Styles.Companion.donateButton
 import website.video.downloader.Styles.Companion.downloadButton
 import website.video.downloader.Styles.Companion.jobTitle
 import website.video.downloader.Styles.Companion.main
@@ -25,9 +24,6 @@ import java.net.*
 class Main : View() {
 
     private val canDownload = false.toProperty()
-    private val donateIsPushed = Prefs.donateIsPushed.toProperty()
-    private val donateText = messages["main.btn.donate"]
-    private val donateBtnText = stringBinding(donateIsPushed) { if (value) null else donateText }
     private val jobsStatus = stringBinding(jobs) { "${messages["main.status.video.count"]}: ${jobs.size}  |  ${messages["main.status.video.total"]}: $totalTime" }
 
     init {
@@ -71,19 +67,6 @@ class Main : View() {
                         Prefs.save()
                     }
                     prefHeight = 40.0
-                }
-
-                button(donateBtnText, imageview("images/donate.png")) {
-                    action {
-                        runAsync { desktop.browse(URI("https://video-downloader.website/#donate")) }
-                        donateIsPushed.value = true
-                        Prefs.donateIsPushed = true
-                        Prefs.save()
-                    }
-                    tooltipProperty().bind(Bindings.`when`(donateIsPushed).then(Tooltip(donateText)).otherwise(null as Tooltip?))
-                    prefHeight = 40.0
-                    isFocusTraversable = false
-                    addClass(donateButton)
                 }
             }
 

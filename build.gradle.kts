@@ -16,7 +16,7 @@ plugins {
 }
 
 group = "website.video.downloader"
-version = "21.3"
+version = "21.4"
 description = "Видеозагрузка"
 
 val tornadofxVersion: String by rootProject

@@ -15,7 +15,6 @@ object Prefs {
     var y: Double
     var width: Double
     var height: Double
-    var donateIsPushed: Boolean
     var maxQuality: Boolean
 
     init {
@@ -27,7 +26,6 @@ object Prefs {
             y = getDouble("y", NaN)
             width = getDouble("width", 600.0)
             height = getDouble("height", 550.0)
-            donateIsPushed = getBoolean("donateIsPushed", false)
             maxQuality = getBoolean("maxQuality", false)
         }
     }
@@ -41,7 +39,6 @@ object Prefs {
             putDouble("y", y)
             putDouble("width", width)
             putDouble("height", height)
-            putBoolean("donateIsPushed", donateIsPushed)
             putBoolean("maxQuality", maxQuality)
         }
     }
