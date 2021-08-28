@@ -23,6 +23,7 @@ import java.net.*
 
 class Main : View() {
 
+    private val coroutineScope = MainScope()
     private val canDownload = false.toProperty()
     private val jobsStatus = stringBinding(jobs) { "${messages["main.status.video.count"]}: ${jobs.size}  |  ${messages["main.status.video.total"]}: $totalTime" }
 
@@ -240,7 +241,7 @@ class Main : View() {
     private fun Job.showVideo() = runAsync { desktop.open(File(file!!)) }
     private fun Job.browseVideoUrl() = runAsync { desktop.browse(URI(url)) }
 
-    private fun runClipboardMonitor() = GlobalScope.launch {
+    private fun runClipboardMonitor() = coroutineScope.launch {
 
         while (isActive) {
 

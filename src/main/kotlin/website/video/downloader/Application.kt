@@ -3,6 +3,7 @@ package website.video.downloader
 import javafx.scene.control.Alert.AlertType.*
 import javafx.scene.control.ButtonType.*
 import javafx.stage.*
+import kotlinx.coroutines.MainScope
 import tornadofx.*
 import tornadofx.FX.Companion.messages
 import website.video.downloader.view.*
@@ -50,7 +51,7 @@ class Application : App(Main::class, Styles::class) {
         }
 
         loadJobs()
-        runJobMonitor()
+        MainScope().runJobMonitor()
         startRest()
 
         super.start(stage)
