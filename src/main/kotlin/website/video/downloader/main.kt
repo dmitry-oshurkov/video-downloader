@@ -22,11 +22,13 @@ fun main() {
                 .let { """XDG_DOWNLOAD_DIR="([^"]+)"""".toRegex().find(it)?.groupValues?.last()?.replace("\$HOME", USER_HOME) }
                 .let { File("$it/.$APP_NAME") }
 
-        writeConfig(AppConfig(
-            locale = Locale.getDefault().toString(),
-            downloadDir = downloadDir.absolutePath,
-            urlListenerPort = 9533
-        ))
+        writeConfig(
+            AppConfig(
+                locale = Locale.getDefault().toString(),
+                downloadDir = downloadDir.absolutePath,
+                urlListenerPort = 9533
+            )
+        )
 
         loadConfig()!!
     }

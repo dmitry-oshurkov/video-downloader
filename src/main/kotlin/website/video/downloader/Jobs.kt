@@ -193,7 +193,7 @@ private val appRoot = File(Application::class.java.protectionDomain.codeSource.l
 private val youtubeDlLinux = "$appRoot/runtime/bin/youtube-dl"
 
 private val youtubeDl = if (IS_WINDOWS)
-    listOf("${youtubeDlLinux}.exe")
+    listOf("$youtubeDlLinux.exe")
 else {
     val youtube = if (File(youtubeDlLinux).exists())
         youtubeDlLinux

@@ -13,6 +13,7 @@ plugins {
     id("de.inetsoftware.setupbuilder") version "4.8.7"
     id("org.gradle.crypto.checksum") version "1.2.0"
     id("io.pixeloutlaw.gradle.buildconfigkt") version "2.1.0"
+    id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
 }
 
 group = "website.video.downloader"
@@ -67,7 +68,10 @@ runtime {
 }
 
 tasks {
-    compileKotlin { kotlinOptions.jvmTarget = VERSION_14.toString() }
+    compileKotlin {
+        dependsOn(ktlintFormat)
+        kotlinOptions.jvmTarget = VERSION_14.toString()
+    }
     compileTestKotlin { kotlinOptions.jvmTarget = compileKotlin.get().kotlinOptions.jvmTarget }
     wrapper { gradleVersion = "7.2" }
     test { useJUnitPlatform() }
@@ -87,13 +91,15 @@ tasks {
         mainClass = project.application.mainClass.get()
         mainJar = if (isFamily(FAMILY_WINDOWS)) "app/$jarName" else "lib/app/$jarName"
 
-        desktopStarter(closureOf<DesktopStarter> {
-            displayName = "Video Downloader"
-            description = "Download online video to local storage for further playing"
-            location = StartMenu
-            categories = "AudioVideo;AudioVideoEditing;"
-            executable = if (isFamily(FAMILY_WINDOWS)) "${project.name}.exe" else "bin/${project.name}"
-        })
+        desktopStarter(
+            closureOf<DesktopStarter> {
+                displayName = "Video Downloader"
+                description = "Download online video to local storage for further playing"
+                location = StartMenu
+                categories = "AudioVideo;AudioVideoEditing;"
+                executable = if (isFamily(FAMILY_WINDOWS)) "${project.name}.exe" else "bin/${project.name}"
+            }
+        )
     }
 
     deb {
@@ -155,4 +161,9 @@ tasks {
         dependsOn(if (isFamily(FAMILY_WINDOWS)) msi else pkg)
         finalizedBy(createChecksums)
     }
+
+    runKtlintCheckOverMainSourceSet { dependsOn(runKtlintFormatOverKotlinScripts, runKtlintFormatOverMainSourceSet) }
+    runKtlintCheckOverTestSourceSet { dependsOn(runKtlintFormatOverKotlinScripts, runKtlintFormatOverTestSourceSet) }
+    runKtlintCheckOverKotlinScripts { dependsOn(runKtlintFormatOverKotlinScripts) }
+    processResources { dependsOn(runKtlintFormatOverKotlinScripts) }
 }
