@@ -37,7 +37,7 @@ class Job(
     var fileSize: Long? by property(fileSize)
     fun fileSizeProperty() = getProperty(Job::fileSize)
 
-    var format: String by property(format)
+    var format: String? by property(format)
     fun formatProperty() = getProperty(Job::format)
 
     var fps: Int? by property(fps)
@@ -46,7 +46,7 @@ class Job(
     var state: DownloadState by property(state)
     fun stateProperty() = getProperty(Job::state)
 
-    var thumbnail: String by property(thumbnail)
+    var thumbnail: String? by property(thumbnail)
     fun thumbnailProperty() = getProperty(Job::thumbnail)
 
 
@@ -73,7 +73,7 @@ class Job(
         file?.let { "${File(it).extension.uppercase()} · $format · $fps ${messages["jobs.units.fps"]}" }
     }
 
-    private var fileSizeTextInProgress: String by property()
+    private var fileSizeTextInProgress: String? by property()
     fun fileSizeTextInProgressProperty() = getProperty(Job::fileSizeTextInProgress)
 
     fun fileSizeTextProperty() = stringBinding(fileSizeProperty(), fileSizeTextInProgressProperty()) {
