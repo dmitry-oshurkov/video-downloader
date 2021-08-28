@@ -9,7 +9,7 @@ import javafx.scene.layout.Priority.*
 import kotlinx.coroutines.*
 import tornadofx.*
 import website.video.downloader.*
-import website.video.downloader.BuildConfig.*
+import website.video.downloader.BuildConfig.VERSION
 import website.video.downloader.DownloadState.*
 import website.video.downloader.Job
 import website.video.downloader.Styles.Companion.backImage

@@ -6,7 +6,7 @@ import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.image.Image
 import tornadofx.*
-import website.video.downloader.BuildConfig.*
+import website.video.downloader.BuildConfig.VERSION
 import website.video.downloader.Styles.Companion.glyphLabel
 import java.awt.*
 import java.io.*

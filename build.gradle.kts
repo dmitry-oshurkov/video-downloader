@@ -8,11 +8,11 @@ import org.gradle.crypto.checksum.Checksum.Algorithm.*
 plugins {
     kotlin("jvm") version "1.5.30"
     id("org.openjfx.javafxplugin") version "0.0.10"
-    id("com.github.johnrengelman.shadow") version "6.1.0"
-    id("org.beryx.runtime") version "1.11.4"
+    id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("org.beryx.runtime") version "1.12.5"
     id("de.inetsoftware.setupbuilder") version "4.8.7"
     id("org.gradle.crypto.checksum") version "1.2.0"
-    id("de.fuerstenau.buildconfig") version "1.1.8"
+    id("io.pixeloutlaw.gradle.buildconfigkt") version "2.1.0"
 }
 
 group = "website.video.downloader"
@@ -27,7 +27,7 @@ repositories {
 }
 
 application {
-    mainClassName = "website.video.downloader.MainKt"
+    mainClass.set("website.video.downloader.MainKt")
 }
 
 dependencies {
@@ -52,6 +52,10 @@ javafx {
     modules = listOf("javafx.controls", "javafx.swing")
 }
 
+buildConfigKt {
+    packageName = "website.video.downloader"
+}
+
 runtime {
     options.set(listOf("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages"))
     modules.set(listOf("java.desktop", "java.sql", "java.net.http", "jdk.unsupported", "jdk.httpserver", "jdk.crypto.ec"))
@@ -65,7 +69,7 @@ runtime {
 tasks {
     compileKotlin { kotlinOptions.jvmTarget = VERSION_14.toString() }
     compileTestKotlin { kotlinOptions.jvmTarget = compileKotlin.get().kotlinOptions.jvmTarget }
-    wrapper { gradleVersion = "6.6.1" }
+    wrapper { gradleVersion = "7.2" }
     test { useJUnitPlatform() }
 
     val imageDir = "${jpackageImage.get().jpackageData.imageOutputDir}/${jpackageImage.get().jpackageData.imageName}"
@@ -80,7 +84,7 @@ tasks {
         icons = "setup/video-downloader.icns"
 
         from(imageDir)
-        mainClass = project.application.mainClassName
+        mainClass = project.application.mainClass.get()
         mainJar = if (isFamily(FAMILY_WINDOWS)) "app/$jarName" else "lib/app/$jarName"
 
         desktopStarter(closureOf<DesktopStarter> {
