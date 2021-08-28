@@ -92,9 +92,9 @@ tasks {
         })
     }
 
-    val chmodX = "chmod +x \$INSTALLATION_ROOT"
-
     deb {
+        val chmodX = "chmod +x \$INSTALLATION_ROOT"
+
         dependsOn(jpackage)
         from("setup") {
             include("youtube-dl")
@@ -119,9 +119,24 @@ tasks {
         }
     }
 
-    val aur by registering {
+    val preparePkg by registering(Copy::class) {
         group = "distribution"
-        dependsOn(jpackage)
+        from("$projectDir/setup/PKGBUILD")
+        into("$buildDir/tmp")
+    }
+
+    val copyPkg by registering(Copy::class) {
+        group = "distribution"
+        from("$buildDir/tmp/${project.name}-${project.version}-1-any.pkg.tar.zst")
+        into("$buildDir/distributions")
+    }
+
+    val pkg by registering(Exec::class) {
+        group = "distribution"
+        dependsOn(jpackage, preparePkg)
+        finalizedBy(copyPkg)
+        workingDir = file("$buildDir/tmp")
+        commandLine = listOf("makepkg", "-cf")
     }
 
     val createChecksums by registering(Checksum::class) {
@@ -133,7 +148,7 @@ tasks {
     @Suppress("UNUSED_VARIABLE")
     val distribution by registering {
         group = "distribution"
-        dependsOn(if (isFamily(FAMILY_WINDOWS)) msi else aur)
+        dependsOn(if (isFamily(FAMILY_WINDOWS)) msi else pkg)
         finalizedBy(createChecksums)
     }
 }

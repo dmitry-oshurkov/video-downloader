@@ -1,0 +1,32 @@
+# Maintainer: Dmitry Oshurkov <video-downloader@oshurkov.name>
+
+pkgname=video-downloader
+pkgver=21.4
+pkgrel=1
+pkgdesc="Download online video to local storage for further playing"
+arch=('any')
+license=('MIT')
+depends=("youtube-dl" "python3" "ffmpeg")
+
+package() {
+
+	DIR=$srcdir/../../..
+
+	mkdir -p "$pkgdir/usr/share/applications"
+	mkdir -p "$pkgdir/usr/share/pixmaps"
+
+	cp -rT "$DIR/build/jpackage" "$pkgdir/usr/share/"
+
+	echo $'[Desktop Entry]
+Name=Video Downloader
+Comment=Download online video to local storage for further playing
+Exec=/usr/share/'$pkgname'/bin/'$pkgname'
+Icon=/usr/share/pixmaps/'$pkgname'.icns
+Terminal=false
+StartupNotify=true
+Type=Application
+Categories=AudioVideo;AudioVideoEditing;
+' >> "$pkgdir/usr/share/applications/$pkgname.desktop"
+
+	cp "$DIR/setup/video-downloader.icns" "$pkgdir/usr/share/pixmaps/$pkgname.icns"
+}
