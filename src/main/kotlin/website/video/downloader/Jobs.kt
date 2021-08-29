@@ -190,15 +190,8 @@ else
 private val outFile = File(appConfig.downloadDir, "%(title)s.%(ext)s").absolutePath
 
 private val appRoot = File(Application::class.java.protectionDomain.codeSource.location.toURI()).parentFile.parent
-private val youtubeDlLinux = "$appRoot/runtime/bin/youtube-dl"
 
 private val youtubeDl = if (IS_WINDOWS)
-    listOf("$youtubeDlLinux.exe")
-else {
-    val youtube = if (File(youtubeDlLinux).exists())
-        youtubeDlLinux
-    else
-        "setup/youtube-dl"
-
-    listOf("python3", youtube)
-}
+    listOf("$appRoot/runtime/bin/youtube-dl.exe")
+else
+    listOf("youtube-dl")

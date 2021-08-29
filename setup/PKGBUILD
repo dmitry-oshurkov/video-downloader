@@ -6,7 +6,7 @@ pkgrel=1
 pkgdesc="Download online video to local storage for further playing"
 arch=('any')
 license=('MIT')
-depends=("youtube-dl" "python3" "ffmpeg")
+depends=("youtube-dl" "ffmpeg")
 
 package() {
 

@@ -106,18 +106,13 @@ tasks {
         val chmodX = "chmod +x \$INSTALLATION_ROOT"
 
         dependsOn(jpackage)
-        from("setup") {
-            include("youtube-dl")
-            into("lib/runtime/bin")
-        }
         homepage = "https://video-downloader.website/"
         maintainerEmail = "video-downloader@oshurkov.name"
-        depends = "python3, ffmpeg"
+        depends = "ffmpeg"
         postinst += listOf(
             "$chmodX/bin/${project.name}",
             "$chmodX/lib/runtime/bin/java",
-            "$chmodX/lib/runtime/bin/keytool",
-            "$chmodX/lib/runtime/bin/youtube-dl"
+            "$chmodX/lib/runtime/bin/keytool"
         )
     }
 
