@@ -155,7 +155,15 @@ tasks {
     @Suppress("UNUSED_VARIABLE")
     val distribution by registering {
         group = "distribution"
-        dependsOn(if (isFamily(FAMILY_WINDOWS)) msi else pkg)
+        dependsOn(
+            when {
+                isFamily(FAMILY_WINDOWS) -> msi
+                else -> if (System.getProperty("os.version").contains("arch"))
+                    pkg
+                else
+                    deb
+            }
+        )
         finalizedBy(createChecksums)
     }
 
