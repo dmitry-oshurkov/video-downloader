@@ -20,6 +20,7 @@ group = "website.video.downloader"
 version = "21.4"
 description = "Видеозагрузка"
 
+val kotlinxCoroutinesVersion: String by rootProject
 val tornadofxVersion: String by rootProject
 val kotestVersion: String by rootProject
 
@@ -34,7 +35,8 @@ application {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-javafx:1.5.1-native-mt")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-javafx:$kotlinxCoroutinesVersion")
     implementation("no.tornado:tornadofx:$tornadofxVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.4")
     implementation("org.zeroturnaround:zt-exec:1.12")
@@ -49,7 +51,7 @@ dependencies {
 }
 
 javafx {
-    version = VERSION_14.toString()
+    version = VERSION_16.toString()
     modules = listOf("javafx.controls", "javafx.swing")
 }
 
@@ -70,7 +72,7 @@ runtime {
 tasks {
     compileKotlin {
         dependsOn(ktlintFormat)
-        kotlinOptions.jvmTarget = VERSION_14.toString()
+        kotlinOptions.jvmTarget = VERSION_16.toString()
     }
     compileTestKotlin { kotlinOptions.jvmTarget = compileKotlin.get().kotlinOptions.jvmTarget }
     wrapper { gradleVersion = "7.2" }
