@@ -34,7 +34,7 @@ application {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1-native-mt")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-javafx:1.5.1-native-mt")
     implementation("no.tornado:tornadofx:$tornadofxVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.4")
     implementation("org.zeroturnaround:zt-exec:1.12")
