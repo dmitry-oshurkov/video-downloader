@@ -159,8 +159,10 @@ tasks {
         finalizedBy(createChecksums)
     }
 
-    runKtlintCheckOverMainSourceSet { dependsOn(runKtlintFormatOverKotlinScripts, runKtlintFormatOverMainSourceSet) }
-    runKtlintCheckOverTestSourceSet { dependsOn(runKtlintFormatOverKotlinScripts, runKtlintFormatOverTestSourceSet) }
-    runKtlintCheckOverKotlinScripts { dependsOn(runKtlintFormatOverKotlinScripts) }
+    // warn removing: task without declaring an explicit or implicit dependency
+    runKtlintFormatOverMainSourceSet { dependsOn(findByName("generateBuildConfigKt")) }
     processResources { dependsOn(runKtlintFormatOverKotlinScripts) }
+    preparePkg { dependsOn(runKtlintFormatOverKotlinScripts) }
+    shadowJar { dependsOn(preparePkg) }
+    createChecksums { dependsOn(copyPkg) }
 }
