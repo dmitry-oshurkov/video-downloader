@@ -241,7 +241,7 @@ class Main : View() {
     private fun Job.showVideo() = runAsync { desktop.open(File(file!!)) }
     private fun Job.browseVideoUrl() = runAsync { desktop.browse(URI(url)) }
 
-    private fun runClipboardMonitor() = coroutineScope.launch {
+    private fun runClipboardMonitor() = GlobalScope.launch {
 
         while (isActive) {
 

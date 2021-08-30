@@ -40,7 +40,7 @@ fun loadJobs() {
             }
 }
 
-fun CoroutineScope.runJobMonitor() = launch {
+fun runJobMonitor() = GlobalScope.launch {
 
     while (isActive) {
         jobs.firstOrNull { it.state == NEW }?.runDownload()
