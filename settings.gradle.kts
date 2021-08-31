@@ -1,1 +1,1 @@
-rootProject.name = "video-downloader"
+rootProject.name = "video-get"

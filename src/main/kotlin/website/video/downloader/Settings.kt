@@ -5,7 +5,7 @@ import io.github.config4k.*
 import java.io.*
 
 /**
- * [application conf file](file:///home/dmitry/.config/video-downloader/application.conf)
+ * [application conf file](file:///home/dmitry/.config/video-get/application.conf)
  */
 data class AppConfig(
     val locale: String,

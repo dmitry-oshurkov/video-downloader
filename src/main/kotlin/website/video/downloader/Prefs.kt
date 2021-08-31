@@ -6,7 +6,7 @@ import java.util.prefs.Preferences.*
 object Prefs {
 
     /**
-     * [userPrefs file](file:///home/dmitry/.java/.userPrefs/video-downloader/prefs.xml)
+     * [userPrefs file](file:///home/dmitry/.java/.userPrefs/video-get/prefs.xml)
      */
     private val userPrefs = userRoot().node(APP_NAME)!!
 

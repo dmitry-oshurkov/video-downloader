@@ -174,7 +174,7 @@ private fun convertUnits(value: String?) = when (value) {
 }
 
 /**
- * [jobs file](file:///home/dmitry/.local/share/video-downloader/jobs.json)
+ * [jobs file](file:///home/dmitry/.local/share/video-get/jobs.json)
  */
 val jobs = mutableListOf<Job>().asObservable()
 

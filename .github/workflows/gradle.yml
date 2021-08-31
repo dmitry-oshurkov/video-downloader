@@ -27,7 +27,7 @@ jobs:
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.0
       with:
-        name: video-downloader
+        name: video-get
         # A file, directory or wildcard pattern that describes what to upload
-        path: build/distributions/video-downloader-*.deb
+        path: build/distributions/video-get-*.deb
         retention-days: 90

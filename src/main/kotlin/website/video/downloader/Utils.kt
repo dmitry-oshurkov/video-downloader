@@ -80,7 +80,7 @@ val totalTime
             "$h:$m:$s"
         }
 
-const val APP_NAME = "video-downloader"
+const val APP_NAME = "video-get"
 
 val desktop = Desktop.getDesktop()!!
 val LINE_SEPARATOR = System.lineSeparator()!!
