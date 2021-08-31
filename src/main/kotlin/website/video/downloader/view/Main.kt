@@ -241,16 +241,14 @@ class Main : View() {
     private fun Job.showVideo() = runAsync { desktop.open(File(file!!)) }
     private fun Job.browseVideoUrl() = runAsync { desktop.browse(URI(url)) }
 
-    private fun runClipboardMonitor() = GlobalScope.launch {
+    private fun runClipboardMonitor() = runLater {
 
-        while (isActive) {
+        while (primaryStage.isShowing) {
 
-            runLater {
-                val url = clipboard.getContent(PLAIN_TEXT) as? String
-                canDownload.value = url?.isYoutubeUrl()
-            }
+            val url = clipboard.getContent(PLAIN_TEXT) as? String
+            canDownload.value = url?.isYoutubeUrl()
 
-            delay(300)
+            runLater(300.millis) { }.completedProperty.awaitUntil()
         }
     }
 }
