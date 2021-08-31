@@ -6,13 +6,9 @@ import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.image.Image
 import tornadofx.*
-import website.video.downloader.BuildConfig.VERSION
 import website.video.downloader.Styles.Companion.glyphLabel
 import java.awt.*
 import java.io.*
-import java.net.*
-import java.net.http.*
-import java.net.http.HttpResponse.*
 import java.util.*
 import javax.imageio.*
 import kotlin.math.*
@@ -47,23 +43,6 @@ fun EventTarget.glyph(value: String, op: Label.() -> Unit = {}) {
 }
 
 fun String.isYoutubeUrl() = startsWith("https://www.youtube.com/watch") || startsWith("https://youtu.be/")
-
-fun hasUpdates() = run {
-
-    val request = HttpRequest.newBuilder()
-        .uri(URI.create("https://video-downloader.website/latest"))
-        .build()
-
-    val published = runCatching {
-        HttpClient.newHttpClient()
-            .send(request, BodyHandlers.ofString())
-            .body()
-            .toDouble()
-    }
-        .getOrDefault(0.0)
-
-    published > VERSION.toDouble()
-}
 
 val totalTime
     get() = jobs
