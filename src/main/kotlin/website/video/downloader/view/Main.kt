@@ -118,6 +118,7 @@ class Main : View() {
                                 anchorpane {
 
                                     val completed = it.stateProperty().isEqualTo(COMPLETED)
+                                    val canReload = it.stateProperty().isEqualTo(IN_PROGRESS).or(it.needReload)
                                     it.durationProperty().onChange { jobsStatus.invalidate() }
 
                                     hbox {
@@ -195,14 +196,14 @@ class Main : View() {
 
                                         btn {
                                             action {
-                                                if (it.needReload.value)
+                                                if (canReload.value)
                                                     item.reload()
                                                 else
                                                     item.showVideo()
                                             }
-                                            enableWhen(completed.or(it.needReload))
-                                            graphic = imageview(Bindings.`when`(it.needReload).then("images/reload.png").otherwise("images/play.png"))
-                                            tooltipProperty().bind(Bindings.`when`(it.needReload).then(Tooltip(messages["main.btn.reload"])).otherwise(Tooltip(messages["main.btn.play"])))
+                                            enableWhen(canReload.or(completed))
+                                            graphic = imageview(Bindings.`when`(canReload).then("images/reload.png").otherwise("images/play.png"))
+                                            tooltipProperty().bind(Bindings.`when`(canReload).then(Tooltip(messages["main.btn.reload"])).otherwise(Tooltip(messages["main.btn.play"])))
                                             addClass(videoButton)
                                         }
 
@@ -237,7 +238,11 @@ class Main : View() {
         }
     }
 
-    private fun Job.reload() = runAsync { runDownload() }
+    private fun Job.reload() = run {
+        stop()
+        stateProperty().set(NEW)
+    }
+
     private fun Job.showVideo() = runAsync { desktop.open(File(file!!)) }
     private fun Job.browseVideoUrl() = runAsync { desktop.browse(URI(url)) }
 

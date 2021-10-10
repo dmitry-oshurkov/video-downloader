@@ -89,6 +89,14 @@ fun Job.runDownload() = run {
 fun Job.delete() = run {
 
     deleted = true
+    stop()
+
+    jobs.remove(this)
+    saveJobs()
+}
+
+fun Job.stop() {
+
     cancelDownload()
 
     if (file != null)
@@ -98,9 +106,6 @@ fun Job.delete() = run {
 
     Files.find(Path.of(appConfig.downloadDir), 1, { path, _ -> path.toFile().name.matches(regex) })
         .forEach { it.toFile().delete() }
-
-    jobs.remove(this)
-    saveJobs()
 }
 
 
