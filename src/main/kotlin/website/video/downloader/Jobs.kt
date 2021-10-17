@@ -113,7 +113,7 @@ private fun Job.execYoutubeDl(vararg args: String, progress: (String) -> Unit) {
 
     if (!deleted) {
         ProcessExecutor()
-            .command(youtubeDl + args)
+            .command(youtubeDl + "--user-agent" + "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0" + args)
             .destroyOnExit()
             .addDestroyer(object : ProcessDestroyer {
                 override fun add(process: Process): Boolean {
