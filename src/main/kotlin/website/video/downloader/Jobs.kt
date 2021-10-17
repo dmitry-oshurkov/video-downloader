@@ -199,4 +199,4 @@ private val appRoot = File(Application::class.java.protectionDomain.codeSource.l
 private val youtubeDl = if (IS_WINDOWS)
     listOf("$appRoot/runtime/bin/youtube-dl.exe")
 else
-    listOf("youtube-dl")
+    listOf("yt-dlp")
