@@ -57,10 +57,14 @@ fun Job.runDownload() = run {
 
         val videoInfo = it.parseJson<YoutubeVideo>()
 
-        val thumbnailImage = SwingFXUtils.toFXImage(ImageIO.read(URL(videoInfo.thumbnail)), null)
-        val thumbnail = imageToBase64(thumbnailImage)
+        // todo add webp support
+        if (videoInfo.thumbnail?.endsWith("webp") == false) {
+            val thumbnailImage = SwingFXUtils.toFXImage(ImageIO.read(URL(videoInfo.thumbnail)), null)
+            val thumbnail = imageToBase64(thumbnailImage)
 
-        setInfo(videoInfo, thumbnail, thumbnailImage)
+            setInfo(videoInfo, thumbnail, thumbnailImage)
+        } else
+            setInfo(videoInfo, null, null)
 
         val height = if (Prefs.maxQuality)
             "2160"
@@ -139,7 +143,7 @@ private fun Job.checkError(s: String) = runLater {
         needReload.set(false)
 }
 
-private fun Job.setInfo(videoInfo: YoutubeVideo, thumbnail: String, thumbnailImage: Image) = runLater {
+private fun Job.setInfo(videoInfo: YoutubeVideo, thumbnail: String?, thumbnailImage: Image?) = runLater {
     titleProperty().set(videoInfo.title)
     thumbnailProperty().set(thumbnail)
     thumbnailImageProperty().set(thumbnailImage)

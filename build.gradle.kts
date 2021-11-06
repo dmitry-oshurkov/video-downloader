@@ -6,7 +6,7 @@ import org.gradle.crypto.checksum.*
 import org.gradle.crypto.checksum.Checksum.Algorithm.*
 
 plugins {
-    kotlin("jvm") version "1.5.30"
+    kotlin("jvm") version "1.5.31"
     id("org.openjfx.javafxplugin") version "0.0.10"
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id("org.beryx.runtime") version "1.12.5"
@@ -17,7 +17,7 @@ plugins {
 }
 
 group = "website.video.downloader"
-version = "21.8"
+version = "21.9"
 description = "Видеозагрузка"
 
 val kotlinxCoroutinesVersion: String by rootProject
@@ -37,7 +37,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-javafx:$kotlinxCoroutinesVersion")
     implementation("no.tornado:tornadofx:$tornadofxVersion")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.4")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
     implementation("org.zeroturnaround:zt-exec:1.12")
     implementation("org.sejda.imageio:webp-imageio:0.1.6")
     implementation("io.github.config4k:config4k:0.4.2")
@@ -50,7 +50,7 @@ dependencies {
 }
 
 javafx {
-    version = VERSION_16.toString()
+    version = VERSION_17.toString()
     modules = listOf("javafx.controls", "javafx.swing")
 }
 
