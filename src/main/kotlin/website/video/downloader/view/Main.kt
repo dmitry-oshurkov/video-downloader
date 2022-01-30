@@ -26,6 +26,7 @@ class Main : View() {
     private val coroutineScope = MainScope()
     private val canDownload = false.toProperty()
     private val jobsStatus = stringBinding(jobs) { "${messages["main.status.video.count"]}: ${jobs.size}  |  ${messages["main.status.video.total"]}: $totalTime" }
+    private val playingStatus = stringBinding(playingTime) { "${messages["main.status.playing.time"]}: ${playingTime.value}  |  " }
 
     init {
         title = messages["main.title"]
@@ -233,6 +234,7 @@ class Main : View() {
             hbox {
                 label(jobsStatus)
                 pane { hgrow = ALWAYS }
+                label(playingStatus)
                 label(VERSION)
             }
         }
@@ -243,7 +245,11 @@ class Main : View() {
         stateProperty().set(NEW)
     }
 
-    private fun Job.showVideo() = runAsync { desktop.open(File(file!!)) }
+    private fun Job.showVideo() = runAsync {
+        desktop.open(File(file!!))
+        runPlayingTimer()
+    }
+
     private fun Job.browseVideoUrl() = runAsync { desktop.browse(URI(url)) }
 
     private fun runClipboardMonitor() = runLater {

@@ -9,9 +9,13 @@ import tornadofx.*
 import website.video.downloader.Styles.Companion.glyphLabel
 import java.awt.*
 import java.io.*
+import java.time.*
+import java.time.temporal.ChronoUnit.*
 import java.util.*
 import javax.imageio.*
+import kotlin.concurrent.*
 import kotlin.math.*
+import kotlin.time.Duration.Companion.seconds
 
 fun openOutDirInFiles() = Runtime.getRuntime().exec("$fileManager ${appConfig.downloadDir}")!!
 
@@ -58,6 +62,26 @@ val totalTime
 
             "$h:$m:$s"
         }
+
+
+fun runPlayingTimer() {
+
+    if (playingStarted == null) {
+        playingStarted = LocalTime.now()
+
+        fixedRateTimer(daemon = true, startAt = Date(), period = 1.seconds.inWholeMilliseconds) {
+            val played = LocalTime.now().minusNanos(playingStarted!!.toNanoOfDay()).truncatedTo(SECONDS)
+
+            if (played.toSecondOfDay() > 0)
+                runLater { playingTime.value = "$played" }
+        }
+    }
+}
+
+var playingTime = "00:00:00".toProperty()
+
+private var playingStarted: LocalTime? = null
+
 
 const val APP_NAME = "video-get"
 
