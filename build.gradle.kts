@@ -6,22 +6,21 @@ import org.gradle.crypto.checksum.*
 import org.gradle.crypto.checksum.Checksum.Algorithm.*
 
 plugins {
-    kotlin("jvm") version "1.6.10"
-    id("org.openjfx.javafxplugin") version "0.0.10"
-    id("com.github.johnrengelman.shadow") version "7.0.0"
-    id("org.beryx.runtime") version "1.12.5"
-    id("de.inetsoftware.setupbuilder") version "4.8.7"
-    id("org.gradle.crypto.checksum") version "1.2.0"
+    kotlin("jvm") version "1.7.10"
+    id("org.openjfx.javafxplugin") version "0.0.13"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("org.beryx.runtime") version "1.12.7"
+    id("de.inetsoftware.setupbuilder") version "4.8.13"
+    id("org.gradle.crypto.checksum") version "1.4.0"
     id("io.pixeloutlaw.gradle.buildconfigkt") version "2.1.0"
-    id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
+    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
 }
 
 group = "website.video.downloader"
-version = "22.1"
+version = "22.2"
 description = "Видеозагрузка"
 
 val kotlinxCoroutinesVersion: String by rootProject
-val tornadofxVersion: String by rootProject
 val kotestVersion: String by rootProject
 
 repositories {
@@ -36,17 +35,22 @@ dependencies {
     implementation(kotlin("reflect"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-javafx:$kotlinxCoroutinesVersion")
-    implementation("no.tornado:tornadofx:$tornadofxVersion")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
+    implementation("no.tornado:tornadofx:1.7.20")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
     implementation("org.zeroturnaround:zt-exec:1.12")
     implementation("org.sejda.imageio:webp-imageio:0.1.6")
     implementation("io.github.config4k:config4k:0.4.2")
-    implementation("org.slf4j:slf4j-jdk14:1.7.33")
+    implementation("org.slf4j:slf4j-jdk14:1.7.36")
 
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest:kotest-property:$kotestVersion")
-    testImplementation("io.mockk:mockk:1.12.2")
+    testImplementation("io.mockk:mockk:1.12.4")
+}
+
+sourceSets {
+    main { java.setSrcDirs(emptyList<Any>()) }
+    test { java.setSrcDirs(emptyList<Any>()) }
 }
 
 javafx {
@@ -55,7 +59,7 @@ javafx {
 }
 
 buildConfigKt {
-    packageName = "website.video.downloader"
+    packageName = project.group.toString()
 }
 
 runtime {
@@ -71,10 +75,10 @@ runtime {
 tasks {
     compileKotlin {
         dependsOn(ktlintFormat)
-        kotlinOptions.jvmTarget = VERSION_16.toString()
+        kotlinOptions.jvmTarget = VERSION_17.toString()
     }
     compileTestKotlin { kotlinOptions.jvmTarget = compileKotlin.get().kotlinOptions.jvmTarget }
-    wrapper { gradleVersion = "7.2" }
+    wrapper { gradleVersion = "7.5" }
     test { useJUnitPlatform() }
 
     val imageDir = "${jpackageImage.get().jpackageData.imageOutputDir}/${jpackageImage.get().jpackageData.imageName}"
@@ -152,9 +156,9 @@ tasks {
     }
 
     val createChecksums by registering(Checksum::class) {
-        files = fileTree(setupBuilder.destinationDir)
-        outputDir = setupBuilder.destinationDir
-        algorithm = SHA256
+        inputFiles.setFrom(fileTree(setupBuilder.destinationDir))
+        outputDirectory.set(setupBuilder.destinationDir)
+        checksumAlgorithm.set(SHA256)
     }
 
     @Suppress("UNUSED_VARIABLE")
@@ -174,6 +178,10 @@ tasks {
 
     // warn removing: task without declaring an explicit or implicit dependency
     runKtlintFormatOverMainSourceSet { dependsOn(findByName("generateBuildConfigKt")) }
+    runKtlintCheckOverMainSourceSet { dependsOn(runKtlintFormatOverMainSourceSet) }
+    runKtlintCheckOverTestSourceSet { dependsOn(runKtlintFormatOverTestSourceSet) }
+    compileTestKotlin { dependsOn(runKtlintFormatOverTestSourceSet) }
+
     processResources { dependsOn(runKtlintFormatOverKotlinScripts) }
     preparePkg { dependsOn(runKtlintFormatOverKotlinScripts) }
     shadowJar { dependsOn(preparePkg) }

@@ -8,7 +8,16 @@ import java.text.*
 
 fun ObjectMapper.setup() = run {
 
-    registerModule(KotlinModule())
+    registerModule(
+        KotlinModule.Builder()
+            .withReflectionCacheSize(512)
+            .configure(KotlinFeature.NullToEmptyCollection, false)
+            .configure(KotlinFeature.NullToEmptyMap, false)
+            .configure(KotlinFeature.NullIsSameAsDefault, false)
+            .configure(KotlinFeature.SingletonSupport, false)
+            .configure(KotlinFeature.StrictNullChecks, false)
+            .build()
+    )
     enable(INDENT_OUTPUT)
     setSerializationInclusion(NON_NULL)
     dateFormat = SimpleDateFormat("yyyy-MM-dd")

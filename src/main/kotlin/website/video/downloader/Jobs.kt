@@ -40,6 +40,7 @@ fun loadJobs() {
             }
 }
 
+@OptIn(DelicateCoroutinesApi::class)
 fun runJobMonitor() = GlobalScope.launch {
 
     while (isActive) {
