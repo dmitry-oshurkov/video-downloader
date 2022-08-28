@@ -6,7 +6,7 @@ pkgrel=1
 pkgdesc="Download online video to local storage for further playing"
 arch=('any')
 license=('MIT')
-depends=("youtube-dl" "ffmpeg")
+depends=("ffmpeg")
 
 package() {
 
@@ -29,4 +29,5 @@ Categories=AudioVideo;AudioVideoEditing;
 ' >> "$pkgdir/usr/share/applications/$pkgname.desktop"
 
 	cp "$DIR/setup/video-downloader.icns" "$pkgdir/usr/share/pixmaps/$pkgname.icns"
+	cp "$DIR/setup/yt-dlp_linux" "$pkgdir/usr/share/video-get/lib/runtime/bin/yt-dlp_linux"
 }

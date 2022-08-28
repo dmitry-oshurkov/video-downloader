@@ -17,7 +17,7 @@ plugins {
 }
 
 group = "website.video.downloader"
-version = "22.3"
+version = "22.4"
 description = "Видеозагрузка"
 
 val kotlinxCoroutinesVersion: String by rootProject
@@ -131,7 +131,7 @@ tasks {
 
     val preparePkg by registering(Copy::class) {
         group = "distribution"
-        from("$projectDir/setup/PKGBUILD")
+        from("setup/PKGBUILD")
         into("$buildDir/tmp")
 
         doLast {
