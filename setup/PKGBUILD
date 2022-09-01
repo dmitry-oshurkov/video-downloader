@@ -30,4 +30,5 @@ Categories=AudioVideo;AudioVideoEditing;
 
 	cp "$DIR/setup/video-downloader.icns" "$pkgdir/usr/share/pixmaps/$pkgname.icns"
 	cp "$DIR/setup/yt-dlp_linux" "$pkgdir/usr/share/video-get/lib/runtime/bin/yt-dlp_linux"
+	cp "$DIR/setup/ffmpeg" "$pkgdir/usr/share/video-get/lib/runtime/bin/ffmpeg"
 }

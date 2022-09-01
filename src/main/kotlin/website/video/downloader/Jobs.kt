@@ -118,7 +118,7 @@ private fun Job.execYoutubeDl(vararg args: String, progress: (String) -> Unit) {
 
     if (!deleted) {
         ProcessExecutor()
-            .command(youtubeDl + "--user-agent" + "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0" + args)
+            .command(youtubeDl + "--ffmpeg-location" + ffmpeg + "--user-agent" + "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0" + args)
             .destroyOnExit()
             .addDestroyer(object : ProcessDestroyer {
                 override fun add(process: Process): Boolean {
@@ -130,7 +130,10 @@ private fun Job.execYoutubeDl(vararg args: String, progress: (String) -> Unit) {
                 override fun size() = 1
             })
             .redirectOutput(object : LogOutputStream() {
-                override fun processLine(line: String) = progress(line)
+                override fun processLine(line: String) {
+                    progress(line)
+                    println(line)
+                }
             })
             .execute()
     }
@@ -201,7 +204,24 @@ private val outFile = File(appConfig.downloadDir, "%(title)s.%(ext)s").absoluteP
 
 private val appRoot = File(Application::class.java.protectionDomain.codeSource.location.toURI()).parentFile.parent
 
+
+private val ytDlpLinux = "$appRoot/runtime/bin/yt-dlp_linux"
+private val ffmpegLinux = "$appRoot/runtime/bin/ffmpeg"
+
 private val youtubeDl = if (IS_WINDOWS)
     listOf("$appRoot/runtime/bin/youtube-dl.exe")
-else
-    listOf("$appRoot/runtime/bin/yt-dlp_linux")
+else {
+    if (File(ytDlpLinux).exists())
+        listOf(ytDlpLinux)
+    else
+        listOf("setup/yt-dlp_linux")
+}
+
+private val ffmpeg = if (IS_WINDOWS)
+    listOf("$appRoot/runtime/bin/youtube-dl.exe")
+else {
+    if (File(ffmpegLinux).exists())
+        listOf(ffmpegLinux)
+    else
+        listOf("setup/ffmpeg")
+}
