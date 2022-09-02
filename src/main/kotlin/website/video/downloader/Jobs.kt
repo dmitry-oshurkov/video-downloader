@@ -114,7 +114,7 @@ fun Job.stop() {
 }
 
 
-private fun Job.execYoutubeDl(vararg args: String, progress: (String) -> Unit) {
+private fun Job.execYoutubeDl(vararg args: String, process: (String) -> Unit) {
 
     if (!deleted) {
         ProcessExecutor()
@@ -131,8 +131,8 @@ private fun Job.execYoutubeDl(vararg args: String, progress: (String) -> Unit) {
             })
             .redirectOutput(object : LogOutputStream() {
                 override fun processLine(line: String) {
-                    progress(line)
                     println(line)
+                    process(line)
                 }
             })
             .execute()
