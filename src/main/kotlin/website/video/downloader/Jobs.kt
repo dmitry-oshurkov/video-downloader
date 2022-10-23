@@ -58,14 +58,16 @@ fun Job.runDownload() = run {
 
         val videoInfo = it.parseJson<YoutubeVideo>()
 
-        // todo add webp support
-        if (videoInfo.thumbnail?.endsWith("webp") == false) {
-            val thumbnailImage = SwingFXUtils.toFXImage(ImageIO.read(URL(videoInfo.thumbnail)), null)
-            val thumbnail = imageToBase64(thumbnailImage)
+        val thumbnailImage = runCatching { SwingFXUtils.toFXImage(ImageIO.read(URL(videoInfo.thumbnail)), null) }
+            .getOrElse {
+                videoInfo.thumbnails
+                    ?.filter { t -> t.url?.endsWith("/default.jpg") == true }
+                    ?.map { t -> SwingFXUtils.toFXImage(ImageIO.read(URL(t.url)), null) }
+                    ?.singleOrNull()
+            }
 
-            setInfo(videoInfo, thumbnail, thumbnailImage)
-        } else
-            setInfo(videoInfo, null, null)
+        val thumbnail = imageToBase64(thumbnailImage)
+        setInfo(videoInfo, thumbnail, thumbnailImage)
 
         val height = if (Prefs.maxQuality)
             "2160"
