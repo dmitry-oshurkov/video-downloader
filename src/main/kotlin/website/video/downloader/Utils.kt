@@ -19,10 +19,14 @@ import kotlin.time.Duration.Companion.seconds
 
 fun openOutDirInFiles() = Runtime.getRuntime().exec("$fileManager ${appConfig.downloadDir}")!!
 
-fun imageToBase64(image: Image) = ByteArrayOutputStream().use {
-    ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", it)
-    Base64.getEncoder().encodeToString(it.toByteArray())
-}!!
+fun imageToBase64(image: Image?) =
+    if (image != null)
+        ByteArrayOutputStream().use {
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", it)
+            Base64.getEncoder().encodeToString(it.toByteArray())
+        }
+    else
+        null
 
 fun EventTarget.btn(op: Button.() -> Unit = {}) {
     button {
