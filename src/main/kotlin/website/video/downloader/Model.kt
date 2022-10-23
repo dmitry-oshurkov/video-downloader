@@ -17,6 +17,7 @@ import javax.imageio.*
 class Job(
     val url: String,
     title: String,
+    uploader: String = "",
     duration: String? = null,
     file: String? = null,
     fileSize: Long? = null,
@@ -27,6 +28,9 @@ class Job(
 ) {
     var title: String by property(title)
     fun titleProperty() = getProperty(Job::title)
+
+    var uploader: String by property(uploader)
+    fun uploaderProperty() = getProperty(Job::uploader)
 
     var duration: String? by property(duration)
     fun durationProperty() = getProperty(Job::duration)
@@ -81,7 +85,7 @@ class Job(
     }
 
     fun tooltipProperty() = stringBinding(titleProperty(), url.toProperty()) {
-        "$title\n\n$url"
+        "$uploader\n\n$title\n\n$url"
     }
 
     @JsonIgnore

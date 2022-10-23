@@ -149,6 +149,7 @@ private fun Job.checkError(s: String) = runLater {
 
 private fun Job.setInfo(videoInfo: YoutubeVideo, thumbnail: String?, thumbnailImage: Image?) = runLater {
     titleProperty().set(videoInfo.title)
+    uploaderProperty().set(videoInfo.uploader)
     thumbnailProperty().set(thumbnail)
     thumbnailImageProperty().set(thumbnailImage)
     durationProperty().set(LocalTime.ofSecondOfDay(videoInfo.duration.toLong()).format(DateTimeFormatter.ofPattern("HH:mm:ss")))
