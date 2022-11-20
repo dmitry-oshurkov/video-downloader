@@ -16,14 +16,16 @@ import java.net.*
 import java.nio.file.*
 import java.time.*
 import java.time.format.*
+import java.util.*
 import javax.imageio.*
 import kotlin.text.Regex.Companion.escape
+import kotlin.time.Duration.Companion.seconds
 
 fun placeToQueue(url: String?) = url
     ?.takeIf { it !in jobs.map { job -> job.url } }
     ?.takeIf { it.isYoutubeUrl() }
     ?.let {
-        jobs += Job(url = it, title = it)
+        jobs += Job(remote = false, url = it, title = it)
         saveJobs()
     }
 
@@ -44,10 +46,70 @@ fun loadJobs() {
 fun runJobMonitor() = GlobalScope.launch {
 
     while (isActive) {
-        jobs.firstOrNull { it.state == NEW }?.runDownload()
+        jobs.firstOrNull { !it.remote && it.state == NEW }?.runDownload()
         delay(300)
     }
 }
+
+
+@OptIn(DelicateCoroutinesApi::class)
+fun runRemoteJobMonitor() = GlobalScope.launch {
+
+    val videoholder = File("/mnt/skyserver-public/various/videoholder")
+    val downloaded = File(videoholder, "downloaded")
+
+    while (isActive) {
+
+        if (downloaded.exists()) {
+
+            downloaded.readLines().forEach {
+
+                val metadata = File(it, "metadata")
+                val lines = metadata.readLines()
+
+                val thumbnail = File(lines[5])
+                val thumbnailB64 = Base64.getEncoder().encodeToString(thumbnail.readBytes())
+
+                val job = Job(
+                    remote = true,
+                    remoteDir = thumbnail.parent,
+                    url = "https://www.youtube.com/watch?v=${lines[0]}",
+                    title = lines[1],
+                    uploader = lines[2],
+                    duration = lines[3],
+                    file = lines[4],
+                    thumbnail = thumbnailB64,
+                )
+
+                jobs += job
+                job.runRemoteDownload()
+
+                saveJobs()
+            }
+
+            delay(1.seconds)
+
+            downloaded.delete()
+        }
+    }
+}
+
+
+fun Job.runRemoteDownload() = run {
+
+    runLater { stateProperty().set(IN_PROGRESS) }
+
+    val file1 = File(file)
+    val outFile = File(appConfig.downloadDir, file1.name)
+    val copyTo = file1.copyTo(outFile, overwrite = true)
+
+    file = copyTo.absolutePath
+
+    fileSizeProperty().set(copyTo.length())
+
+    runLater { stateProperty().set(COMPLETED) }
+}
+
 
 fun Job.runDownload() = run {
 
@@ -94,6 +156,10 @@ fun Job.runDownload() = run {
 }
 
 fun Job.delete() = run {
+
+    if (remote) {
+        File(remoteDir).deleteRecursively()
+    }
 
     deleted = true
     stop()

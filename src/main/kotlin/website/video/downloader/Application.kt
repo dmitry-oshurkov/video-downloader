@@ -39,6 +39,7 @@ class Application : App(Main::class, Styles::class) {
 
         loadJobs()
         runJobMonitor()
+        runRemoteJobMonitor()
         startRest()
 
         super.start(stage)

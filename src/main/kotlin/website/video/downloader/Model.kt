@@ -15,7 +15,9 @@ import java.util.*
 import javax.imageio.*
 
 class Job(
+    val remote: Boolean,
     val url: String,
+    var remoteDir: String? = null,
     title: String,
     uploader: String = "",
     duration: String? = null,
