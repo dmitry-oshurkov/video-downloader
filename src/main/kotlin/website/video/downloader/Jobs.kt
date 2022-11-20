@@ -5,6 +5,8 @@ package website.video.downloader
 import javafx.embed.swing.*
 import javafx.scene.image.*
 import kotlinx.coroutines.*
+import org.apache.commons.io.file.*
+import org.apache.commons.io.filefilter.*
 import org.zeroturnaround.exec.*
 import org.zeroturnaround.exec.listener.*
 import org.zeroturnaround.exec.stream.*
@@ -18,6 +20,7 @@ import java.time.*
 import java.time.format.*
 import java.util.*
 import javax.imageio.*
+import kotlin.io.path.*
 import kotlin.text.Regex.Companion.escape
 import kotlin.time.Duration.Companion.seconds
 
@@ -55,42 +58,51 @@ fun runJobMonitor() = GlobalScope.launch {
 @OptIn(DelicateCoroutinesApi::class)
 fun runRemoteJobMonitor() = GlobalScope.launch {
 
-    val videoholder = File("/mnt/skyserver-public/various/videoholder")
-    val downloaded = File(videoholder, "downloaded")
+    val videoholder = File("/mnt/skyserver-public/various/services/videoholder")
 
     while (isActive) {
 
-        if (downloaded.exists()) {
+        val downloaded = PathUtils
+            .newDirectoryStream(Path(videoholder.absolutePath), DirectoryFileFilter.INSTANCE)
+            .map { PathUtils.newDirectoryStream(Path(it.absolutePathString()), DirectoryFileFilter.INSTANCE).toList() }
+            .filter { it.isNotEmpty() }
+            .flatten()
+            .map { it.toString() }
 
-            downloaded.readLines().forEach {
+        val map = jobs.mapNotNull { it.remoteDir }
+
+        downloaded
+            .filter { it !in map }
+            .forEach {
 
                 val metadata = File(it, "metadata")
+                val thumbnail = File(it, "thumbnail.jpg")
                 val lines = metadata.readLines()
 
-                val thumbnail = File(lines[5])
-                val thumbnailB64 = Base64.getEncoder().encodeToString(thumbnail.readBytes())
+                if (thumbnail.exists()) {
 
-                val job = Job(
-                    remote = true,
-                    remoteDir = thumbnail.parent,
-                    url = "https://www.youtube.com/watch?v=${lines[0]}",
-                    title = lines[1],
-                    uploader = lines[2],
-                    duration = lines[3],
-                    file = lines[4],
-                    thumbnail = thumbnailB64,
-                )
+                    val thumbnailB64 = Base64.getEncoder().encodeToString(thumbnail.readBytes())
 
-                jobs += job
-                job.runRemoteDownload()
+                    val job = Job(
+                        remote = true,
+                        remoteDir = it,
+                        url = "https://youtu.be/${lines[0]}?t=${lines[3].toInt() - 10}",
+                        title = lines[1],
+                        uploader = lines[2],
+                        duration = lines[4],
+                        file = File(it, lines[5]).absolutePath,
+                        thumbnail = thumbnailB64,
+                    )
 
-                saveJobs()
+                    job.runRemoteDownload()
+                    runLater { jobs += job }
+                    saveJobs()
+
+                    File(it).delete()
+                }
             }
 
-            delay(1.seconds)
-
-            downloaded.delete()
-        }
+        delay(10.seconds)
     }
 }
 

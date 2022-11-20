@@ -41,6 +41,7 @@ dependencies {
     implementation("org.sejda.imageio:webp-imageio:0.1.6")
     implementation("io.github.config4k:config4k:0.4.2")
     implementation("org.slf4j:slf4j-jdk14:1.7.36")
+    implementation("commons-io:commons-io:2.11.0")
 
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
