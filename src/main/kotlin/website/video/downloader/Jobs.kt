@@ -50,6 +50,7 @@ fun runJobMonitor() = GlobalScope.launch {
 
     while (isActive) {
         jobs.firstOrNull { !it.remote && it.state == NEW }?.runDownload()
+        jobs.firstOrNull { it.remote && it.state == NEW }?.runRemoteDownload()
         delay(300)
     }
 }
@@ -94,14 +95,11 @@ fun runRemoteJobMonitor() = GlobalScope.launch {
                         thumbnail = thumbnailB64,
                     )
 
-                    job.runRemoteDownload()
                     runLater { jobs += job }
-                    saveJobs()
-
-                    File(it).delete()
                 }
             }
 
+        saveJobs()
         delay(10.seconds)
     }
 }
@@ -117,9 +115,12 @@ fun Job.runRemoteDownload() = run {
 
     file = copyTo.absolutePath
 
-    fileSizeProperty().set(copyTo.length())
+    runLater {
+        fileSizeProperty().set(copyTo.length())
+        stateProperty().set(COMPLETED)
+    }
 
-    runLater { stateProperty().set(COMPLETED) }
+    File(remoteDir).delete()
 }
 
 
