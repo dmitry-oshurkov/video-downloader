@@ -59,7 +59,7 @@ fun runJobMonitor() = GlobalScope.launch {
 @OptIn(DelicateCoroutinesApi::class)
 fun runRemoteJobMonitor() = GlobalScope.launch {
 
-    val videoholder = File("/mnt/skyserver-public/various/services/videoholder")
+    val videoholder = File("/mnt/skyserver-public/services/videoholder")
 
     while (isActive) {
 
@@ -70,10 +70,10 @@ fun runRemoteJobMonitor() = GlobalScope.launch {
             .flatten()
             .map { it.toString() }
 
-        val map = jobs.mapNotNull { it.remoteDir }
+        val alreadyExists = jobs.mapNotNull { it.remoteDir }
 
         downloaded
-            .filter { it !in map }
+            .filter { it !in alreadyExists }
             .forEach {
 
                 val metadata = File(it, "metadata")
@@ -83,15 +83,18 @@ fun runRemoteJobMonitor() = GlobalScope.launch {
                 if (thumbnail.exists()) {
 
                     val thumbnailB64 = Base64.getEncoder().encodeToString(thumbnail.readBytes())
+                    val duration = lines[3].toLong()
 
                     val job = Job(
                         remote = true,
                         remoteDir = it,
-                        url = "https://youtu.be/${lines[0]}?t=${lines[3].toInt() - 10}",
+                        url = "https://youtu.be/${lines[0]}?t=${duration - 15}",
                         title = lines[1],
                         uploader = lines[2],
-                        duration = lines[4],
-                        file = File(it, lines[5]).absolutePath,
+                        duration = LocalTime.ofSecondOfDay(duration).format(DateTimeFormatter.ofPattern("HH:mm:ss")),
+                        file = File(it, File(lines[5]).name).absolutePath,
+                        format = "★",
+                        fps = 0,
                         thumbnail = thumbnailB64,
                     )
 

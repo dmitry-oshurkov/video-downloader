@@ -20,6 +20,7 @@ import website.video.downloader.Styles.Companion.progressLabels
 import website.video.downloader.Styles.Companion.videoButton
 import java.io.*
 import java.net.*
+import java.time.*
 
 class Main : View() {
 
@@ -69,6 +70,7 @@ class Main : View() {
                         Prefs.save()
                     }
                     prefHeight = 40.0
+                    isFocusTraversable = false
                 }
             }
 
@@ -250,7 +252,7 @@ class Main : View() {
         runPlayingTimer()
     }
 
-    private fun Job.browseVideoUrl() = runAsync { desktop.browse(URI(url)) }
+    private fun Job.browseVideoUrl() = runAsync { desktop.browse(URI("$url&t=${LocalTime.parse(this@browseVideoUrl.duration!!).toSecondOfDay() - 15}")) }
 
     private fun runClipboardMonitor() = runLater {
 
