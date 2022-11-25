@@ -170,7 +170,7 @@ class Main : View() {
 
                                             hbox {
                                                 spacing = 5.0
-                                                visibleWhen(it.speedProperty().isNotNull.or(it.formatProperty().isNotNull))
+                                                visibleWhen(it.speedProperty().isNotNull.or(it.formatProperty().isNotNull).and(!it.remote))
 
                                                 glyph("\uf40b") {
                                                     prefHeight = 16.0

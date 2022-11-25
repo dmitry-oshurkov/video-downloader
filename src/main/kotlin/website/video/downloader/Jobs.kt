@@ -3,6 +3,7 @@
 package website.video.downloader
 
 import javafx.embed.swing.*
+import javafx.scene.control.ProgressIndicator.*
 import javafx.scene.image.*
 import kotlinx.coroutines.*
 import org.apache.commons.io.file.*
@@ -110,20 +111,22 @@ fun runRemoteJobMonitor() = GlobalScope.launch {
 
 fun Job.runRemoteDownload() = run {
 
-    runLater { stateProperty().set(IN_PROGRESS) }
-
-    val file1 = File(file)
-    val outFile = File(appConfig.downloadDir, file1.name)
-    val copyTo = file1.copyTo(outFile, overwrite = true)
-
-    file = copyTo.absolutePath
-
     runLater {
-        fileSizeProperty().set(copyTo.length())
-        stateProperty().set(COMPLETED)
+        stateProperty().set(IN_PROGRESS)
+        progressProperty().set(INDETERMINATE_PROGRESS)
     }
 
-    File(remoteDir).delete()
+    val file1 = File(file)
+    val copied = file1.copyTo(File(appConfig.downloadDir, file1.name), overwrite = true)
+
+    file = copied.absolutePath
+
+    File(remoteDir).deleteRecursively()
+
+    runLater {
+        fileSizeProperty().set(copied.length())
+        stateProperty().set(COMPLETED)
+    }
 }
 
 
@@ -172,10 +175,6 @@ fun Job.runDownload() = run {
 }
 
 fun Job.delete() = run {
-
-    if (remote) {
-        File(remoteDir).deleteRecursively()
-    }
 
     deleted = true
     stop()
