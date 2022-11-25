@@ -95,7 +95,7 @@ fun runRemoteJobMonitor() = GlobalScope.launch {
                         duration = LocalTime.ofSecondOfDay(duration).format(DateTimeFormatter.ofPattern("HH:mm:ss")),
                         file = File(it, File(lines[5]).name).absolutePath,
                         format = "★",
-                        fps = 0,
+                        fps = 30,
                         thumbnail = thumbnailB64,
                     )
 

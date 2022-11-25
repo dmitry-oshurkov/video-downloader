@@ -170,16 +170,16 @@ class Main : View() {
 
                                             hbox {
                                                 spacing = 5.0
-                                                visibleWhen(it.speedProperty().isNotNull.or(it.formatProperty().isNotNull).and(!it.remote))
+                                                visibleWhen(it.speedProperty().isNotNull.or(it.formatProperty().isNotNull))
 
                                                 glyph("\uf40b") {
                                                     prefHeight = 16.0
-                                                    removeWhen(completed)
+                                                    removeWhen(completed.or(it.remote))
                                                 }
 
                                                 label(it.speedProperty()) {
                                                     addClass(progressLabels)
-                                                    removeWhen(completed)
+                                                    removeWhen(completed.or(it.remote))
                                                 }
 
                                                 label(it.formatTextProperty()) {
