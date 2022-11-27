@@ -64,6 +64,10 @@ class Main : View() {
 
                 region { hgrow = ALWAYS }
 
+                label(readyCount) {
+                    visibleWhen { readyCount.greaterThan(0) }
+                }
+
                 checkbox("max quality", Prefs.maxQuality.toProperty()) {
                     action {
                         Prefs.maxQuality = isSelected

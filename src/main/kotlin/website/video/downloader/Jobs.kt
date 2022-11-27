@@ -72,36 +72,37 @@ fun runRemoteJobMonitor() = GlobalScope.launch {
             .map { it.toString() }
 
         val alreadyExists = jobs.mapNotNull { it.remoteDir }
+        val ready = downloaded.filter { it !in alreadyExists }
+        runLater { readyCount.value = ready.size }
 
-        downloaded
-            .filter { it !in alreadyExists }
-            .forEach {
+        ready.forEach {
 
-                val metadata = File(it, "metadata")
-                val thumbnail = File(it, "thumbnail.jpg")
-                val lines = metadata.readLines()
+            val metadata = File(it, "metadata")
+            val thumbnail = File(it, "thumbnail.jpg")
+            val lines = metadata.readLines()
 
-                if (thumbnail.exists()) {
+            if (thumbnail.exists()) {
 
-                    val thumbnailB64 = Base64.getEncoder().encodeToString(thumbnail.readBytes())
-                    val duration = lines[3].toLong()
+                val thumbnailB64 = Base64.getEncoder().encodeToString(thumbnail.readBytes())
+                val duration = lines[3].toLong()
 
-                    val job = Job(
-                        remote = true,
-                        remoteDir = it,
-                        url = "https://youtu.be/${lines[0]}?t=${duration - 15}",
-                        title = lines[1],
-                        uploader = lines[2],
-                        duration = LocalTime.ofSecondOfDay(duration).format(DateTimeFormatter.ofPattern("HH:mm:ss")),
-                        file = File(it, File(lines[5]).name).absolutePath,
-                        format = "★",
-                        fps = 30,
-                        thumbnail = thumbnailB64,
-                    )
+                val job = Job(
+                    remote = true,
+                    remoteDir = it,
+                    url = "https://youtu.be/${lines[0]}?t=${duration - 15}",
+                    title = lines[1],
+                    uploader = lines[2],
+                    duration = LocalTime.ofSecondOfDay(duration).format(DateTimeFormatter.ofPattern("HH:mm:ss")),
+                    file = File(it, File(lines[5]).name).absolutePath,
+                    format = "★",
+                    fps = 30,
+                    thumbnail = thumbnailB64,
+                )
 
-                    runLater { jobs += job }
-                }
+                runLater { jobs += job }
+                runLater { readyCount.value = readyCount.value - 1 }
             }
+        }
 
         saveJobs()
         delay(10.seconds)
@@ -274,6 +275,10 @@ private fun convertUnits(value: String?) = when (value) {
  * [jobs file](file:///home/dmitry/.local/share/video-get/jobs.json)
  */
 val jobs = mutableListOf<Job>().asObservable()
+
+val ready = mutableListOf<String>().asObservable()
+
+var readyCount = 0.toProperty()
 
 private val downloadProgress = """\[download\]\s+(.*)%\s+of\s+([\d.]*)(GiB|MiB|KiB).+at\s+([\d.]*)(GiB\/s|MiB\/s|KiB\/s).+ETA\s+([\d:]*)""".toRegex()
 private val downloaded = """Merging formats into "([\s\S]*?)"""".toRegex()
