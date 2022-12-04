@@ -13,6 +13,7 @@ import website.video.downloader.BuildConfig.VERSION
 import website.video.downloader.DownloadState.*
 import website.video.downloader.Job
 import website.video.downloader.Styles.Companion.backImage
+import website.video.downloader.Styles.Companion.channel
 import website.video.downloader.Styles.Companion.downloadButton
 import website.video.downloader.Styles.Companion.jobTitle
 import website.video.downloader.Styles.Companion.main
@@ -160,7 +161,7 @@ class Main : View() {
 
                                             hbox {
                                                 spacing = 5.0
-                                                hiddenWhen(completed.or(it.progressProperty().isNull))
+                                                removeWhen(completed.or(it.progressProperty().isNull))
 
                                                 progressbar(it.progressProperty()) {
                                                     prefHeight = 16.0
@@ -169,6 +170,15 @@ class Main : View() {
 
                                                 label(it.etaProperty()) {
                                                     addClass(progressLabels)
+                                                }
+                                            }
+
+                                            hbox {
+                                                spacing = 5.0
+                                                visibleWhen(completed.or(it.progressProperty().isNull))
+
+                                                label(it.uploaderProperty()) {
+                                                    addClass(channel)
                                                 }
                                             }
 

@@ -14,6 +14,7 @@ class Styles : Stylesheet() {
         val main by cssclass()
         val backImage by cssclass()
         val jobTitle by cssclass()
+        val channel by cssclass()
         val progressLabels by cssclass()
         val downloadButton by cssclass()
         val videoButton by cssclass()
@@ -70,6 +71,12 @@ class Styles : Stylesheet() {
         jobTitle {
             fontSize = 10.pt
             fontWeight = BOLD
+        }
+
+        channel {
+            fontSize = 10.pt
+            fontWeight = BOLD
+            textFill = c("#75659f")
         }
 
         listView {
