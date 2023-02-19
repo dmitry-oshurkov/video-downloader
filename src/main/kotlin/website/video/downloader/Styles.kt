@@ -91,6 +91,7 @@ class Styles : Stylesheet() {
             and(selected) {
                 label { textFill = BLACK }
                 jobTitle { textFill = MIDNIGHTBLUE }
+                channel { textFill = SLATEBLUE }
                 backgroundColor += c(0.56078434, 0.7372549, 0.56078434, 0.25)
             }
         }

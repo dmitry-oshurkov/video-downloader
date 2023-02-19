@@ -94,6 +94,12 @@ class Main : View() {
                     }
                 }
 
+                onDoubleClick {
+                    selectedItem
+                        ?.takeIf { it.state == COMPLETED }
+                        ?.also { it.showVideo() }
+                }
+
                 cellFormat {
 
                     graphic = hbox {
@@ -159,25 +165,24 @@ class Main : View() {
                                         vbox {
                                             spacing = 10.0
 
-                                            hbox {
-                                                spacing = 5.0
-                                                removeWhen(completed.or(it.progressProperty().isNull))
+                                            stackpane {
 
-                                                progressbar(it.progressProperty()) {
-                                                    prefHeight = 16.0
-                                                    prefWidth = 150.0
+                                                hbox {
+                                                    spacing = 5.0
+                                                    removeWhen(completed.or(it.progressProperty().isNull))
+
+                                                    progressbar(it.progressProperty()) {
+                                                        prefHeight = 16.0
+                                                        prefWidth = 150.0
+                                                    }
+
+                                                    label(it.etaProperty()) {
+                                                        addClass(progressLabels)
+                                                    }
                                                 }
-
-                                                label(it.etaProperty()) {
-                                                    addClass(progressLabels)
-                                                }
-                                            }
-
-                                            hbox {
-                                                spacing = 5.0
-                                                visibleWhen(completed.or(it.progressProperty().isNull))
 
                                                 label(it.uploaderProperty()) {
+                                                    visibleWhen(completed.or(it.progressProperty().isNull))
                                                     addClass(channel)
                                                 }
                                             }
@@ -238,12 +243,6 @@ class Main : View() {
                             }
                         }
                     }
-                }
-
-                onDoubleClick {
-                    selectedItem
-                        ?.takeIf { it.state == COMPLETED }
-                        ?.also { it.showVideo() }
                 }
             }
 
