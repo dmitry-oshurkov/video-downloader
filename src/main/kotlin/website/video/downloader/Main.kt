@@ -6,21 +6,20 @@ import java.nio.file.*
 import java.util.*
 
 fun main() {
-
     /* Fix permission denied when start process from "/usr/share/video-get/bin". */
     System.setProperty("jdk.lang.Process.launchMechanism", "VFORK")
 
     appConfig = loadConfig() ?: run {
-
-        val downloadDir = if (IS_WINDOWS)
+        val downloadDir = if (IS_WINDOWS) {
             File("$USER_HOME/Downloads/.$APP_NAME").apply {
                 mkdirs()
                 Files.setAttribute(toPath(), "dos:hidden", true)
             }
-        else
+        } else {
             File("$configDir/user-dirs.dirs").readText()
                 .let { """XDG_DOWNLOAD_DIR="([^"]+)"""".toRegex().find(it)?.groupValues?.last()?.replace("\$HOME", USER_HOME) }
                 .let { File("$it/.$APP_NAME") }
+        }
 
         writeConfig(
             AppConfig(
