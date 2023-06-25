@@ -1,6 +1,17 @@
 root = true
 
-# noinspection EditorConfigKeyCorrectness
-[*.{kt,kts}]
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
 max_line_length = 900
-disabled_rules = no-wildcard-imports, no-consecutive-blank-lines
+tab_width = 4
+ij_continuation_indent_size = 4
+
+# noinspection EditorConfigKeyCorrectness
+[{*.kt,*.kts}]
+ktlint_disabled_rules = no-wildcard-imports, no-consecutive-blank-lines, multiline-if-else, no-empty-first-line-in-method-block, trailing-comma-on-call-site, trailing-comma-on-declaration-site
+ij_kotlin_name_count_to_use_star_import = 1
+ij_kotlin_name_count_to_use_star_import_for_members = 1

@@ -13,7 +13,7 @@ plugins {
     id("de.inetsoftware.setupbuilder") version "4.8.13"
     id("org.gradle.crypto.checksum") version "1.4.0"
     id("io.pixeloutlaw.gradle.buildconfigkt") version "2.1.0"
-    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+    id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
 }
 
 group = "website.video.downloader"
