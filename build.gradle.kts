@@ -79,7 +79,7 @@ tasks {
         kotlinOptions.jvmTarget = VERSION_17.toString()
     }
     compileTestKotlin { kotlinOptions.jvmTarget = compileKotlin.get().kotlinOptions.jvmTarget }
-    wrapper { gradleVersion = "7.5" }
+    wrapper { gradleVersion = "8.0.2" }
     test { useJUnitPlatform() }
 
     val imageDir = "${jpackageImage.get().jpackageData.imageOutputDir}/${jpackageImage.get().jpackageData.imageName}"
