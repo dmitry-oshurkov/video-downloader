@@ -6,11 +6,11 @@ import org.gradle.crypto.checksum.*
 import org.gradle.crypto.checksum.Checksum.Algorithm.*
 
 plugins {
-    kotlin("jvm") version "1.7.10"
-    id("org.openjfx.javafxplugin") version "0.0.13"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("org.beryx.runtime") version "1.12.7"
-    id("de.inetsoftware.setupbuilder") version "4.8.13"
+    kotlin("jvm") version "1.8.0"
+    id("org.openjfx.javafxplugin") version "0.0.14"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("org.beryx.runtime") version "1.13.0"
+    id("de.inetsoftware.setupbuilder") version "7.2.17"
     id("org.gradle.crypto.checksum") version "1.4.0"
     id("io.pixeloutlaw.gradle.buildconfigkt") version "2.1.0"
     id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
@@ -168,14 +168,16 @@ tasks {
         dependsOn(
             when {
                 isFamily(FAMILY_WINDOWS) -> msi
-                else -> if (System.getProperty("os.version").contains("arch"))
+                else -> // todo fix ver check if (System.getProperty("os.version").contains("arch"))
                     pkg
-                else
-                    deb
+//                else
+//                    deb
             }
         )
         finalizedBy(createChecksums)
     }
+
+    // distribution -> createChecksums -> copyPkg -> pkg -> jpackage -> preparePkg -> shadowJar
 
     // warn removing: task without declaring an explicit or implicit dependency
     runKtlintFormatOverMainSourceSet { dependsOn(findByName("generateBuildConfigKt")) }
@@ -185,6 +187,7 @@ tasks {
 
     processResources { dependsOn(runKtlintFormatOverKotlinScripts) }
     preparePkg { dependsOn(runKtlintFormatOverKotlinScripts) }
+    jar { dependsOn(preparePkg) }
     shadowJar { dependsOn(preparePkg) }
     createChecksums { dependsOn(copyPkg) }
 }
