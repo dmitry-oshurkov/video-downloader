@@ -64,12 +64,16 @@ fun runRemoteJobMonitor() = GlobalScope.launch {
 
     while (isActive) {
 
-        val downloaded = PathUtils
-            .newDirectoryStream(Path(channels.absolutePath), INSTANCE)
-            .map { PathUtils.newDirectoryStream(Path(it.absolutePathString()), INSTANCE).toList() }
-            .filter { it.isNotEmpty() }
-            .flatten()
-            .map { it.toString() }
+        val downloaded = try {
+            PathUtils
+                .newDirectoryStream(Path(channels.absolutePath), INSTANCE)
+                .map { PathUtils.newDirectoryStream(Path(it.absolutePathString()), INSTANCE).toList() }
+                .filter { it.isNotEmpty() }
+                .flatten()
+                .map { it.toString() }
+        } catch (e: FileSystemException) {
+            emptyList()
+        }
 
         val alreadyExists = jobs.mapNotNull { it.remoteDir }
         val ready = downloaded.filter { it !in alreadyExists }
