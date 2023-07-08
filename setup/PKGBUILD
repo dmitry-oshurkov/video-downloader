@@ -3,7 +3,7 @@
 pkgname=video-get
 pkgver=?
 pkgrel=1
-pkgdesc="Download online video to local storage for further playing"
+pkgdesc="Это сервис для загрузки видео с видеохостингов в локальное хранилище для дальнейшего автономного просмотра"
 arch=('any')
 license=('MIT')
 depends=("ffmpeg")
@@ -18,8 +18,8 @@ package() {
 	cp -rT "$DIR/build/jpackage" "$pkgdir/usr/share/"
 
 	echo $'[Desktop Entry]
-Name=Video Downloader
-Comment=Download online video to local storage for further playing
+Name=Видеосборщик
+Comment=Это сервис для загрузки видео с видеохостингов в локальное хранилище для дальнейшего автономного просмотра
 Exec=/usr/share/'$pkgname'/bin/'$pkgname'
 Icon=/usr/share/pixmaps/'$pkgname'.icns
 Terminal=false

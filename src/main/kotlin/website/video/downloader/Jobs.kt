@@ -7,7 +7,7 @@ import javafx.scene.control.ProgressIndicator.*
 import javafx.scene.image.*
 import kotlinx.coroutines.*
 import org.apache.commons.io.file.*
-import org.apache.commons.io.filefilter.*
+import org.apache.commons.io.filefilter.DirectoryFileFilter.*
 import org.zeroturnaround.exec.*
 import org.zeroturnaround.exec.listener.*
 import org.zeroturnaround.exec.stream.*
@@ -60,13 +60,13 @@ fun runJobMonitor() = GlobalScope.launch {
 @OptIn(DelicateCoroutinesApi::class)
 fun runRemoteJobMonitor() = GlobalScope.launch {
 
-    val videoholder = File("/mnt/skyserver-public/services/videoholder")
+    val channels = File("/mnt/skyserver-public/services/video-collector/channels")
 
     while (isActive) {
 
         val downloaded = PathUtils
-            .newDirectoryStream(Path(videoholder.absolutePath), DirectoryFileFilter.INSTANCE)
-            .map { PathUtils.newDirectoryStream(Path(it.absolutePathString()), DirectoryFileFilter.INSTANCE).toList() }
+            .newDirectoryStream(Path(channels.absolutePath), INSTANCE)
+            .map { PathUtils.newDirectoryStream(Path(it.absolutePathString()), INSTANCE).toList() }
             .filter { it.isNotEmpty() }
             .flatten()
             .map { it.toString() }
