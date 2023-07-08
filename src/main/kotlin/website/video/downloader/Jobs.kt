@@ -82,36 +82,40 @@ fun runRemoteJobMonitor() = GlobalScope.launch {
         ready.forEach {
 
             val metadata = File(it, "metadata")
-            val thumbnailJpg = File(it, "thumbnail.jpg")
-            val thumbnailWebp = File(it, "thumbnail.webp")
-            val lines = metadata.readLines()
 
-            val thumbnailBytes = when {
-                thumbnailJpg.exists() -> thumbnailJpg.readBytes()
-                thumbnailWebp.exists() -> thumbnailWebp.readBytes()
-                else -> null
-            }
+            if (metadata.exists()) {
 
-            if (thumbnailBytes != null) {
+                val thumbnailJpg = File(it, "thumbnail.jpg")
+                val thumbnailWebp = File(it, "thumbnail.webp")
+                val lines = metadata.readLines()
 
-                val thumbnailB64 = Base64.getEncoder().encodeToString(thumbnailBytes)
-                val duration = lines[3].toLong()
+                val thumbnailBytes = when {
+                    thumbnailJpg.exists() -> thumbnailJpg.readBytes()
+                    thumbnailWebp.exists() -> thumbnailWebp.readBytes()
+                    else -> null
+                }
 
-                val job = Job(
-                    remote = true,
-                    remoteDir = it,
-                    url = "https://youtu.be/${lines[0]}?t=${duration - 15}",
-                    title = lines[1],
-                    uploader = lines[2],
-                    duration = LocalTime.ofSecondOfDay(duration).format(DateTimeFormatter.ofPattern("HH:mm:ss")),
-                    file = File(it, File(lines[5]).name).absolutePath,
-                    format = "★",
-                    fps = 30,
-                    thumbnail = thumbnailB64,
-                )
+                if (thumbnailBytes != null) {
 
-                runLater { jobs += job }
-                runLater { readyCount.value = readyCount.value - 1 }
+                    val thumbnailB64 = Base64.getEncoder().encodeToString(thumbnailBytes)
+                    val duration = lines[3].toLong()
+
+                    val job = Job(
+                        remote = true,
+                        remoteDir = it,
+                        url = "https://youtu.be/${lines[0]}?t=${duration - 15}",
+                        title = lines[1],
+                        uploader = lines[2],
+                        duration = LocalTime.ofSecondOfDay(duration).format(DateTimeFormatter.ofPattern("HH:mm:ss")),
+                        file = File(it, File(lines[5]).name).absolutePath,
+                        format = "★",
+                        fps = 30,
+                        thumbnail = thumbnailB64,
+                    )
+
+                    runLater { jobs += job }
+                    runLater { readyCount.value = readyCount.value - 1 }
+                }
             }
         }
 
