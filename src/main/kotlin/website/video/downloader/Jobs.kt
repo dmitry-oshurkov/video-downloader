@@ -82,12 +82,19 @@ fun runRemoteJobMonitor() = GlobalScope.launch {
         ready.forEach {
 
             val metadata = File(it, "metadata")
-            val thumbnail = File(it, "thumbnail.jpg")
+            val thumbnailJpg = File(it, "thumbnail.jpg")
+            val thumbnailWebp = File(it, "thumbnail.webp")
             val lines = metadata.readLines()
 
-            if (thumbnail.exists()) {
+            val thumbnailBytes = when {
+                thumbnailJpg.exists() -> thumbnailJpg.readBytes()
+                thumbnailWebp.exists() -> thumbnailWebp.readBytes()
+                else -> null
+            }
 
-                val thumbnailB64 = Base64.getEncoder().encodeToString(thumbnail.readBytes())
+            if (thumbnailBytes != null) {
+
+                val thumbnailB64 = Base64.getEncoder().encodeToString(thumbnailBytes)
                 val duration = lines[3].toLong()
 
                 val job = Job(
