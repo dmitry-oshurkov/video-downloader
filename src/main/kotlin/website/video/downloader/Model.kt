@@ -100,6 +100,11 @@ class Job(
     var deleted = false // need to be public for ignore
 
     override fun toString() = title
+
+    init {
+        speed = "".padStart(12)
+        eta = "00:00"
+    }
 }
 
 private fun humanReadableByteCountSI(bytesValue: Long) = run {

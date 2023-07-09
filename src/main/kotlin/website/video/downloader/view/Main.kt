@@ -6,12 +6,10 @@ import javafx.scene.control.*
 import javafx.scene.control.SelectionMode.*
 import javafx.scene.input.DataFormat.*
 import javafx.scene.layout.Priority.*
-import kotlinx.coroutines.*
 import tornadofx.*
 import website.video.downloader.*
 import website.video.downloader.BuildConfig.VERSION
 import website.video.downloader.DownloadState.*
-import website.video.downloader.Job
 import website.video.downloader.Styles.Companion.backImage
 import website.video.downloader.Styles.Companion.channel
 import website.video.downloader.Styles.Companion.downloadButton
@@ -25,7 +23,6 @@ import java.time.*
 
 class Main : View() {
 
-    private val coroutineScope = MainScope()
     private val canDownload = false.toProperty()
     private val jobsStatus = stringBinding(jobs) { "${messages["main.status.video.count"]}: ${jobs.size}  |  ${messages["main.status.video.total"]}: $totalTime" }
     private val playingStatus = stringBinding(playingTime) { "${messages["main.status.playing.time"]}: ${playingTime.value}  |  " }
@@ -116,10 +113,11 @@ class Main : View() {
                             hgrow = ALWAYS
 
                             vbox {
-                                spacing = 12.0
+                                spacing = 8.0
                                 padding = insets(0.0, 0.0, 0.0, 10.0)
                                 prefWidth = 0.0 // for label autosize
                                 prefHeight = 0.0 // for label autosize
+                                minHeight = 70.0
                                 anchorpaneConstraints {
                                     rightAnchor = 0
                                     leftAnchor = 0
@@ -135,61 +133,41 @@ class Main : View() {
                                     val canReload = it.stateProperty().isEqualTo(IN_PROGRESS).or(it.needReload)
                                     it.durationProperty().onChange { jobsStatus.invalidate() }
 
-                                    hbox {
-                                        spacing = 15.0
+                                    gridpane {
 
-                                        vbox {
-                                            spacing = 10.0
+                                        row {
 
                                             hbox {
                                                 spacing = 5.0
+                                                minWidth = 100.0
+                                                minHeight = 21.0
+                                                alignment = CENTER_LEFT
                                                 visibleWhen(it.durationProperty().isNotNull)
 
-                                                glyph("\uf210") {
-                                                    prefHeight = 16.0
-                                                }
+                                                glyph("\uf210") { prefHeight = 16.0 }
                                                 label(it.durationProperty())
                                             }
 
-                                            hbox {
-                                                spacing = 5.0
-                                                visibleWhen(it.fileSizeTextProperty().isNotNull)
-
-                                                glyph("\uf318") {
-                                                    prefHeight = 16.0
-                                                }
-                                                label(it.fileSizeTextProperty())
+                                            label(it.uploaderProperty()) {
+                                                addClass(channel)
                                             }
                                         }
 
-                                        vbox {
-                                            spacing = 10.0
+                                        row {
 
-                                            stackpane {
+                                            hbox {
+                                                spacing = 5.0
+                                                minHeight = 21.0
+                                                alignment = CENTER_LEFT
+                                                visibleWhen(it.fileSizeTextProperty().isNotNull)
 
-                                                hbox {
-                                                    spacing = 5.0
-                                                    removeWhen(completed.or(it.progressProperty().isNull))
-
-                                                    progressbar(it.progressProperty()) {
-                                                        prefHeight = 16.0
-                                                        prefWidth = 150.0
-                                                    }
-
-                                                    label(it.etaProperty()) {
-                                                        addClass(progressLabels)
-                                                    }
-                                                }
-
-                                                label(it.uploaderProperty()) {
-                                                    visibleWhen(completed.or(it.progressProperty().isNull))
-                                                    addClass(channel)
-                                                }
+                                                glyph("\uf318") { prefHeight = 16.0 }
+                                                label(it.fileSizeTextProperty())
                                             }
 
                                             hbox {
                                                 spacing = 5.0
-                                                visibleWhen(it.speedProperty().isNotNull.or(it.formatProperty().isNotNull))
+                                                alignment = CENTER_LEFT
 
                                                 glyph("\uf40b") {
                                                     prefHeight = 16.0
@@ -199,6 +177,17 @@ class Main : View() {
                                                 label(it.speedProperty()) {
                                                     addClass(progressLabels)
                                                     removeWhen(completed.or(it.remote))
+                                                }
+
+                                                progressbar(it.progressProperty()) {
+                                                    removeWhen(completed)
+                                                    prefHeight = 16.0
+                                                    prefWidth = 150.0
+                                                }
+
+                                                label(it.etaProperty()) {
+                                                    addClass(progressLabels)
+                                                    removeWhen(completed)
                                                 }
 
                                                 label(it.formatTextProperty()) {

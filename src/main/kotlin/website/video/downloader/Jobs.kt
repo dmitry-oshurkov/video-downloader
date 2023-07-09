@@ -295,7 +295,7 @@ val ready = mutableListOf<String>().asObservable()
 
 var readyCount = 0.toProperty()
 
-private val downloadProgress = """\[download\]\s+(.*)%\s+of\s+([\d.]*)(GiB|MiB|KiB).+at\s+([\d.]*)(GiB\/s|MiB\/s|KiB\/s).+ETA\s+([\d:]*)""".toRegex()
+private val downloadProgress = """\[download\]\s+(.*)%\s+of[\s~]+([\d.]*)(GiB|MiB|KiB).+at\s+([\d.]*)(GiB\/s|MiB\/s|KiB\/s).+ETA\s+([\d:]*)""".toRegex()
 private val downloaded = """Merging formats into "([\s\S]*?)"""".toRegex()
 private val alreadyDownloaded = """\[download\]\s+(.*)\s+has""".toRegex()
 
