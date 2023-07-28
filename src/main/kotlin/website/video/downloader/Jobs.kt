@@ -142,6 +142,7 @@ fun Job.runRemoteDownload() = run {
     runLater {
         fileSizeProperty().set(copied.length())
         stateProperty().set(COMPLETED)
+        saveJobs()
     }
 }
 
