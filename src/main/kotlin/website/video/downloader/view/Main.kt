@@ -261,7 +261,7 @@ class Main : View() {
         while (primaryStage.isShowing) {
 
             val url = clipboard.getContent(PLAIN_TEXT) as? String
-            canDownload.value = url?.isYoutubeUrl()
+            canDownload.value = url?.isYoutubeUrl() == true || url?.isPHUrl() == true
 
             runLater(300.millis) { }.completedProperty.awaitUntil()
         }

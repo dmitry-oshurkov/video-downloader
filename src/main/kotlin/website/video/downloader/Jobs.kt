@@ -27,7 +27,7 @@ import kotlin.time.Duration.Companion.seconds
 
 fun placeToQueue(url: String?) = url
     ?.takeIf { it !in jobs.map { job -> job.url } }
-    ?.takeIf { it.isYoutubeUrl() }
+    ?.takeIf { it.isYoutubeUrl() || it.isPHUrl() }
     ?.let {
         jobs += Job(remote = false, url = it, title = it)
         saveJobs()
