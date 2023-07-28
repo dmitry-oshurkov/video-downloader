@@ -63,7 +63,7 @@ class Main : View() {
                 region { hgrow = ALWAYS }
 
                 label(readyCount) {
-                    visibleWhen { readyCount.greaterThan(0) }
+                    visibleWhen { readyCount.greaterThan(0).or(readyCount.lessThan(0)) }
                 }
 
                 checkbox("max quality", Prefs.maxQuality.toProperty()) {
@@ -187,7 +187,7 @@ class Main : View() {
 
                                                 label(it.etaProperty()) {
                                                     addClass(progressLabels)
-                                                    removeWhen(completed)
+                                                    removeWhen(completed.or(it.remote))
                                                 }
 
                                                 label(it.formatTextProperty()) {
