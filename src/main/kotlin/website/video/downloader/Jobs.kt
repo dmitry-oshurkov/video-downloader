@@ -52,7 +52,7 @@ fun runJobMonitor() = GlobalScope.launch {
     while (isActive) {
         jobs.firstOrNull { !it.remote && it.state == NEW }?.runDownload()
         jobs.firstOrNull { it.remote && it.state == NEW }?.runRemoteDownload()
-        delay(300)
+        delay(1.seconds)
     }
 }
 

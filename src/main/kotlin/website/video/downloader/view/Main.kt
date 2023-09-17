@@ -263,7 +263,7 @@ class Main : View() {
             val url = clipboard.getContent(PLAIN_TEXT) as? String
             canDownload.value = url?.isYoutubeUrl() == true || url?.isPHUrl() == true
 
-            runLater(300.millis) { }.completedProperty.awaitUntil()
+            runLater(800.millis) { }.completedProperty.awaitUntil()
         }
     }
 }
