@@ -17,7 +17,7 @@ plugins {
 }
 
 group = "website.video.downloader"
-version = "23.3"
+version = "23.4"
 description = "Видеозагрузка"
 
 val kotlinxCoroutinesVersion: String by rootProject
