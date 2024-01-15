@@ -13,6 +13,7 @@ import org.zeroturnaround.exec.listener.*
 import org.zeroturnaround.exec.stream.*
 import tornadofx.*
 import tornadofx.FX.Companion.messages
+import tornadofx.FX.Companion.primaryStage
 import website.video.downloader.DownloadState.*
 import java.io.*
 import java.net.*
@@ -154,40 +155,45 @@ fun Job.runDownload() = run {
 
         checkError(it)
 
-        val videoInfo = it.parseJson<YoutubeVideo>()
+        val videoInfo = runCatching { it.parseJson<YoutubeVideo>() }
+            .onFailure { e -> error("Download", e.stackTraceToString(), owner = primaryStage) }
+            .getOrNull()
 
-        val thumbnailImage = runCatching { SwingFXUtils.toFXImage(ImageIO.read(URL(videoInfo.thumbnail)), null) }
-            .getOrElse {
-                videoInfo.thumbnails
-                    ?.filter { t -> t.url?.endsWith("/default.jpg") == true }
-                    ?.map { t -> SwingFXUtils.toFXImage(ImageIO.read(URL(t.url)), null) }
-                    ?.singleOrNull()
+        if (videoInfo != null) {
+
+            val thumbnailImage = runCatching { SwingFXUtils.toFXImage(ImageIO.read(URL(videoInfo.thumbnail)), null) }
+                .getOrElse {
+                    videoInfo.thumbnails
+                        ?.filter { t -> t.url?.endsWith("/default.jpg") == true }
+                        ?.map { t -> SwingFXUtils.toFXImage(ImageIO.read(URL(t.url)), null) }
+                        ?.singleOrNull()
+                }
+
+            val thumbnail = imageToBase64(thumbnailImage)
+            setInfo(videoInfo, thumbnail, thumbnailImage)
+
+            val height = if (Prefs.maxQuality)
+                "2160"
+            else
+                "1080"
+
+            execYoutubeDl("--no-warnings", "-f", "bestvideo[height<=$height]+bestaudio/best[height<=$height]", "-o", outFile, url) { s ->
+
+                checkError(s)
+
+                val groups = downloadProgress.find(s)?.groups
+                val pathname = downloaded.find(s)?.groupValues?.last() ?: alreadyDownloaded.find(s)?.groupValues?.last()
+
+                if (groups != null)
+                    setProgress(groups)
+
+                if (pathname != null)
+                    runLater { fileProperty().set(pathname) }
             }
 
-        val thumbnail = imageToBase64(thumbnailImage)
-        setInfo(videoInfo, thumbnail, thumbnailImage)
-
-        val height = if (Prefs.maxQuality)
-            "2160"
-        else
-            "1080"
-
-        execYoutubeDl("--no-warnings", "-f", "bestvideo[height<=$height]+bestaudio/best[height<=$height]", "-o", outFile, url) { s ->
-
-            checkError(s)
-
-            val groups = downloadProgress.find(s)?.groups
-            val pathname = downloaded.find(s)?.groupValues?.last() ?: alreadyDownloaded.find(s)?.groupValues?.last()
-
-            if (groups != null)
-                setProgress(groups)
-
-            if (pathname != null)
-                runLater { fileProperty().set(pathname) }
+            if (file != null)
+                setCompletedAndSave(videoInfo, File(file!!))
         }
-
-        if (file != null)
-            setCompletedAndSave(videoInfo, File(file!!))
     }
 }
 
