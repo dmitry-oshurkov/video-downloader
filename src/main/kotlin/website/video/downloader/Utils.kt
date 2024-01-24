@@ -52,6 +52,7 @@ fun EventTarget.glyph(value: String, op: Label.() -> Unit = {}) {
 
 fun String.isYoutubeUrl() = startsWith("https://www.youtube.com/watch") || startsWith("https://youtu.be/")
 fun String.isPHUrl() = startsWith("https://rt.pornhub.com/view_video")
+fun String.isDzenUrl() = startsWith("https://dzen.ru/video/watch")
 
 val totalTime
     get() = jobs
