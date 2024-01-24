@@ -7,17 +7,19 @@ import tornadofx.*
 
 class UtilsSpec : StringSpec({
 
+    appConfig = AppConfig(locale = "libero", downloadDir = "potenti", urlListenerPort = 1983)
+
     "totalTime should return a sum of video times" {
 
-        mockkStatic("website.video.downloader.MainKt")
+        mockkStatic(::main)
         every { appConfig.downloadDir } returns ""
 
-        mockkStatic("website.video.downloader.JobsKt")
+        mockkStatic(::loadJobs)
         every { jobs } returns listOf(
-            Job("", "", "00:23:24"),
-            Job("", "", "00:21:49"),
-            Job("", "", "00:20:42"),
-            Job("", "", "00:14:19")
+            Job(false, "", "", "00:23:24"),
+            Job(false, "", "", "00:21:49"),
+            Job(false, "", "", "00:20:42"),
+            Job(false, "", "", "00:14:19")
         ).asObservable()
 
         totalTime shouldBe "01:20:14"
