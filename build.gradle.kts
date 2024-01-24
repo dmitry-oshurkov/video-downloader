@@ -6,7 +6,7 @@ import org.gradle.crypto.checksum.*
 import org.gradle.crypto.checksum.Checksum.Algorithm.*
 
 plugins {
-    kotlin("jvm") version "1.8.0"
+    kotlin("jvm") version "1.9.21"
     id("org.openjfx.javafxplugin") version "0.0.14"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("org.beryx.runtime") version "1.13.0"
@@ -17,7 +17,7 @@ plugins {
 }
 
 group = "website.video.downloader"
-version = "23.4"
+version = "24.1"
 description = "Видеозагрузка"
 
 val kotlinxCoroutinesVersion: String by rootProject
@@ -55,7 +55,7 @@ sourceSets {
 }
 
 javafx {
-    version = VERSION_17.toString()
+    version = VERSION_21.toString()
     modules = listOf("javafx.controls", "javafx.swing")
 }
 
@@ -76,10 +76,10 @@ runtime {
 tasks {
     compileKotlin {
         dependsOn(ktlintFormat)
-        kotlinOptions.jvmTarget = VERSION_17.toString()
+        kotlinOptions.jvmTarget = VERSION_21.toString()
     }
     compileTestKotlin { kotlinOptions.jvmTarget = compileKotlin.get().kotlinOptions.jvmTarget }
-    wrapper { gradleVersion = "8.0.2" }
+    wrapper { gradleVersion = "8.5" }
     test { useJUnitPlatform() }
 
     val imageDir = "${jpackageImage.get().jpackageData.imageOutputDir}/${jpackageImage.get().jpackageData.imageName}"
@@ -130,13 +130,15 @@ tasks {
         }
     }
 
+    val buildDirectory = layout.buildDirectory.get()
+
     val preparePkg by registering(Copy::class) {
         group = "distribution"
         from("setup/PKGBUILD")
-        into("$buildDir/tmp")
+        into("$buildDirectory/tmp")
 
         doLast {
-            file("$buildDir/tmp/PKGBUILD").apply {
+            file("$buildDirectory/tmp/PKGBUILD").apply {
                 writeText(readText().replace("pkgver=?", "pkgver=$version"))
             }
         }
@@ -144,15 +146,15 @@ tasks {
 
     val copyPkg by registering(Copy::class) {
         group = "distribution"
-        from("$buildDir/tmp/${project.name}-${project.version}-1-any.pkg.tar.zst")
-        into("$buildDir/distributions")
+        from("$buildDirectory/tmp/${project.name}-${project.version}-1-any.pkg.tar.zst")
+        into("$buildDirectory/distributions")
     }
 
     val pkg by registering(Exec::class) {
         group = "distribution"
         dependsOn(jpackage, preparePkg)
         finalizedBy(copyPkg)
-        workingDir = file("$buildDir/tmp")
+        workingDir = file("$buildDirectory/tmp")
         commandLine = listOf("makepkg", "-cf")
     }
 
@@ -162,7 +164,6 @@ tasks {
         checksumAlgorithm.set(SHA256)
     }
 
-    @Suppress("UNUSED_VARIABLE")
     val distribution by registering {
         group = "distribution"
         dependsOn(
