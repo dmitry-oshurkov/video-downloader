@@ -309,7 +309,7 @@ private val jobsFile = if (IS_WINDOWS)
 else
     File("$USER_HOME/.local/share/$APP_NAME/jobs.json")
 
-private val outFile = File(appConfig.downloadDir, "%(title)s.%(ext)s").absolutePath
+private val outFile = File(appConfig.downloadDir, "%(title).200B.%(ext)s").absolutePath
 
 private val appRoot = File(Application::class.java.protectionDomain.codeSource.location.toURI()).parentFile.parent
 
