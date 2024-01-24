@@ -17,7 +17,7 @@ plugins {
 }
 
 group = "website.video.downloader"
-version = "24.2"
+version = "24.3"
 description = "Видеозагрузка"
 
 val kotlinxCoroutinesVersion: String by rootProject
@@ -55,7 +55,7 @@ sourceSets {
 }
 
 javafx {
-    version = VERSION_21.toString()
+    version = VERSION_17.toString()
     modules = listOf("javafx.controls", "javafx.swing")
 }
 
