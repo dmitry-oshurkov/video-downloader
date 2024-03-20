@@ -16,10 +16,10 @@ class UtilsSpec : StringSpec({
 
         mockkStatic(::loadJobs)
         every { jobs } returns listOf(
-            Job(false, "", "", "00:23:24"),
-            Job(false, "", "", "00:21:49"),
-            Job(false, "", "", "00:20:42"),
-            Job(false, "", "", "00:14:19")
+            Job(false, "", "", "", duration = "00:23:24"),
+            Job(false, "", "", "", duration = "00:21:49"),
+            Job(false, "", "", "", duration = "00:20:42"),
+            Job(false, "", "", "", duration = "00:14:19")
         ).asObservable()
 
         totalTime shouldBe "01:20:14"
