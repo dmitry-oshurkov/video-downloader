@@ -254,7 +254,7 @@ class Main : View() {
         runPlayingTimer()
     }
 
-    private fun Job.browseVideoUrl() = runAsync { desktop.browse(URI("$url&t=${LocalTime.parse(this@browseVideoUrl.duration!!).toSecondOfDay() - 15}")) }
+    private fun Job.browseVideoUrl() = runAsync { desktop.browse(URI("$url&t=${LocalTime.parse(this@browseVideoUrl.duration ?: "00:00").toSecondOfDay() - 15}")) }
 
     private fun runClipboardMonitor() = runLater {
 
