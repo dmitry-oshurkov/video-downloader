@@ -89,7 +89,10 @@ class Styles : Stylesheet() {
             and(even) { backgroundColor += c(0.56078434, 0.7372549, 0.56078434, 0.08) }
             and(odd, empty) { backgroundColor += TRANSPARENT }
             and(selected) {
-                label { textFill = BLACK }
+                label {
+                    @Suppress("RemoveRedundantQualifierName")
+                    textFill = javafx.scene.paint.Color.BLACK
+                }
                 jobTitle { textFill = MIDNIGHTBLUE }
                 channel { textFill = SLATEBLUE }
                 backgroundColor += c(0.56078434, 0.7372549, 0.56078434, 0.25)

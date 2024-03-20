@@ -17,7 +17,7 @@ import kotlin.concurrent.*
 import kotlin.math.*
 import kotlin.time.Duration.Companion.seconds
 
-fun openOutDirInFiles() = Runtime.getRuntime().exec("$fileManager ${appConfig.downloadDir}")!!
+fun openOutDirInFiles() = Runtime.getRuntime().exec(arrayOf(fileManager, appConfig.downloadDir))!!
 
 fun imageToBase64(image: Image?) =
     if (image != null)

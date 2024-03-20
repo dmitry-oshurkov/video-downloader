@@ -161,11 +161,11 @@ fun Job.runDownload() = run {
 
         if (videoInfo != null) {
 
-            val thumbnailImage = runCatching { SwingFXUtils.toFXImage(ImageIO.read(URL(videoInfo.thumbnail)), null) }
+            val thumbnailImage = runCatching { SwingFXUtils.toFXImage(ImageIO.read(URI(videoInfo.thumbnail!!).toURL()), null) }
                 .getOrElse {
                     videoInfo.thumbnails
                         ?.filter { t -> t.url?.endsWith("/default.jpg") == true }
-                        ?.map { t -> SwingFXUtils.toFXImage(ImageIO.read(URL(t.url)), null) }
+                        ?.map { t -> SwingFXUtils.toFXImage(ImageIO.read(URI(t.url!!).toURL()), null) }
                         ?.singleOrNull()
                 }
 

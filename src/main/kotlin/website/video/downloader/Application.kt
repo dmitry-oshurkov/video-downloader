@@ -8,7 +8,7 @@ import java.util.*
 class Application : App(Main::class, Styles::class) {
 
     init {
-        FX.locale = Locale(appConfig.locale)
+        FX.locale = Locale.of(appConfig.locale)
     }
 
     override fun start(stage: Stage) {
