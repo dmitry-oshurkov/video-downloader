@@ -6,7 +6,7 @@ import org.gradle.crypto.checksum.*
 import org.gradle.crypto.checksum.Checksum.Algorithm.*
 
 plugins {
-    kotlin("jvm") version "1.9.21"
+    kotlin("jvm") version "1.9.22"
     id("org.openjfx.javafxplugin") version "0.0.14"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("org.beryx.runtime") version "1.13.0"
@@ -17,7 +17,7 @@ plugins {
 }
 
 group = "website.video.downloader"
-version = "24.3"
+version = "24.4"
 description = "Видеозагрузка"
 
 val kotlinxCoroutinesVersion: String by rootProject
@@ -46,7 +46,7 @@ dependencies {
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest:kotest-property:$kotestVersion")
-    testImplementation("io.mockk:mockk:1.12.4")
+    testImplementation("io.mockk:mockk:1.13.10")
 }
 
 sourceSets {
@@ -55,7 +55,7 @@ sourceSets {
 }
 
 javafx {
-    version = VERSION_17.toString()
+    version = VERSION_17.toString() // VERSION_17 for window position fix
     modules = listOf("javafx.controls", "javafx.swing")
 }
 
@@ -73,13 +73,11 @@ runtime {
     }
 }
 
+kotlin { jvmToolchain(21) }
+
 tasks {
-    compileKotlin {
-        dependsOn(ktlintFormat)
-        kotlinOptions.jvmTarget = VERSION_21.toString()
-    }
-    compileTestKotlin { kotlinOptions.jvmTarget = compileKotlin.get().kotlinOptions.jvmTarget }
-    wrapper { gradleVersion = "8.5" }
+    compileKotlin { dependsOn(ktlintFormat) }
+    wrapper { gradleVersion = "8.6" }
     test { useJUnitPlatform() }
 
     val imageDir = "${jpackageImage.get().jpackageData.imageOutputDir}/${jpackageImage.get().jpackageData.imageName}"

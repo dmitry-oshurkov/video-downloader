@@ -27,3 +27,5 @@ desktop.ini
 local.properties
 build/
 out/
+
+.idea/kotlinc.xml
